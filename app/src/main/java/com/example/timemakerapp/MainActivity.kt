@@ -1,27 +1,28 @@
 package com.example.timemakerapp
 
-import android.app.ActionBar
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var textMessage: TextView
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_calendar -> {
-                textMessage.setText(getString(R.string.title_calendar))
+                val calendarFragment = CalendarFragment()
+                openFragment(calendarFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                textMessage.setText(getString(R.string.title_dashboard))
+                val dashboardFragment = DashboardFragment()
+                openFragment(dashboardFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_achievements -> {
-                textMessage.setText(getString(R.string.title_achievements))
+                val achievementFragment = AchievementsFragment()
+                openFragment(achievementFragment)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -33,7 +34,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        textMessage = findViewById(R.id.message)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        navView.selectedItemId = R.id.navigation_dashboard;
+    }
+
+    private fun openFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.activity_main, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
