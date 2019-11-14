@@ -1,5 +1,6 @@
 package com.example.timemakerapp
 
+import android.app.ActionBar
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -8,18 +9,19 @@ import android.widget.TextView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var textMessage: TextView
+
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navigation_home -> {
-                textMessage.setText("Calendar")
+            R.id.navigation_calendar -> {
+                textMessage.setText(getString(R.string.title_calendar))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                textMessage.setText(R.string.title_dashboard)
+                textMessage.setText(getString(R.string.title_dashboard))
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
-                textMessage.setText("Achievement")
+            R.id.navigation_achievements -> {
+                textMessage.setText(getString(R.string.title_achievements))
                 return@OnNavigationItemSelectedListener true
             }
         }
