@@ -3,5 +3,8 @@
     <string name="title_calendar">Calendar</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_achievements">Achievements</string>
+    <string name="focus_editText">Add your focus here</string>
+    <string name="daily_focus_title">Your Focus For Today</string>
+    <string name="focus_checkbox">Done!</string>
 
 </resources>
