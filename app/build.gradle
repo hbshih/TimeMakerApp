@@ -9,7 +9,7 @@ android {
     buildToolsVersion "29.0.0"
     defaultConfig {
         applicationId "com.example.timemakerapp"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -23,6 +23,8 @@ android {
     }
 }
 
+apply plugin: 'com.android.application'
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -35,4 +37,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    // add the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    // add SDKs for any other desired Firebase products
+    implementation 'com.google.firebase:firebase-auth:19.1.0' // Authentication
+    implementation 'com.google.firebase:firebase-database:19.2.0' //Database
+    implementation 'com.google.firebase:firebase-firestore:21.3.0' // CLoud Firestore
+    // Flex CSS in Android
+    implementation 'com.google.android:flexbox:1.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services' // Firebase
+

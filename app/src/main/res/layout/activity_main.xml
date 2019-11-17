@@ -5,7 +5,10 @@
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
+<<<<<<< HEAD
+=======
+        android:background="@color/darkBlue"
+>>>>>>> 10f1ecd07f0be14c0bdff94697e24db47b1f006f
         tools:context=".MainActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2274A5</color>
-    <color name="colorPrimaryDark">#2274A5</color>
+<<<<<<< HEAD
     <color name="colorPrimaryLight">#332274A5</color>
-    <color name="colorAccent">#FFD816</color>
+=======
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="darkBlue">#2274a5</color>
+    <color name="lightBlue">#AECCDE</color>
+    <color name="yellow">#ffd816</color>
+    <color name="white">#ffffff</color>
+    <color name="darkGrey">#191716</color>
+    <color name="facebook">#3B5998</color>
+    <color name="google">#dd4b39</color>
+>>>>>>> 10f1ecd07f0be14c0bdff94697e24db47b1f006f
 </resources>
