@@ -4,6 +4,7 @@ package com.example.timemakerapp;
 import android.content.Context;
 import android.os.Bundle;
 
+import android.text.Layout;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,27 +33,31 @@ public class AchievementsFragment extends Fragment {
     public AchievementsFragment() {
         // Required empty public constructor
     }
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        super.onCreate(savedInstanceState);
+        View fragView = inflater.inflate(R.layout.fragment_achievements, container, false);
 
-        listview = (ListView) getView().findViewById(R.id.listview);
-        //MyAdapter adapter = new MyAdapter(mC, mTitle, mDescription, images);
-
-        return inflater.inflate(R.layout.fragment_achievements, container, false);
+        listview =(ListView) fragView.findViewById(R.id.listview);
+        MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
+        listview.setAdapter(adapter);
+        return fragView;
     }
 
     class MyAdapter extends ArrayAdapter<String>{
 
-        Context context;
-        String rTitle[];
-        String rDescription[];
-        int rImgs[];
+        private LayoutInflater mInflater;
+        private Context context;
+        private String rTitle[];
+        private String rDescription[];
+        private int rImgs[];
 
         MyAdapter(Context c, String title[], String description[], int imgs[])
         {
@@ -61,21 +66,22 @@ public class AchievementsFragment extends Fragment {
             this.rTitle = title;
             this.rDescription = description;
             this.rImgs = imgs;
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View row = getLayoutInflater().inflate(achievements_row, parent, false);
-            ImageView images = row.findViewById(R.id.image1);
-            TextView myTitle = row.findViewById(R.id.textview1);
-            TextView myDescription = row.findViewById(R.id.textview2);
+            convertView = mInflater.inflate(achievements_row, null);
+            ImageView images = convertView.findViewById(R.id.image1);
+            TextView myTitle = convertView.findViewById(R.id.textview1);
+            TextView myDescription = convertView.findViewById(R.id.textview2);
 
             images.setImageResource(rImgs[position]);
             myTitle.setText(rTitle[position]);
             myDescription.setText(rDescription[position]);
 
-            return row;
+            return convertView;
         }
     }
 
