@@ -5,15 +5,25 @@ import android.content.Context;
 import android.os.Bundle;
 
 import android.text.Layout;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.*;
+
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.timemakerapp.R.layout.achievements_row;
 
@@ -28,6 +38,28 @@ public class AchievementsFragment extends Fragment {
     String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals"};
     String mDescription[] = {"Complete your first goal", "....bar...", "...bar..."};
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
+    private DatabaseReference mDatabase;
+
+    /* Connection to Firebase Firestore to get achievements datas
+    private void getAchievementsItems() {
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@Nonnull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<DocumentSnapshot> myListOfDocuments = task.getResult().getDocuments();
+                            System.out.println("OnSuccess : " + myListOfDocuments);
+                        }else
+                        {
+                            System.out.println("Query Failed");
+                        }
+                    }
+                });
+
+    }*/
 
 
     public AchievementsFragment() {
@@ -48,8 +80,11 @@ public class AchievementsFragment extends Fragment {
         listview =(ListView) fragView.findViewById(R.id.listview);
         MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
         listview.setAdapter(adapter);
+        getAchievementsItems();
         return fragView;
     }
+
+
 
     class MyAdapter extends ArrayAdapter<String>{
 
