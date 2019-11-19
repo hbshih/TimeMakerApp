@@ -37,10 +37,11 @@ public class AchievementsFragment extends Fragment {
 
     ListView listview;
     Context mC;
-    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "First Use", "3 Days in a Row", "Completed 10 Goals", "3 Days in a Row", "Completed 10 Goals"};
-    String mDescription[] = {"Complete your first goal", "....bar...", "...bar...","Complete your first goal", "....bar...", "...bar...", "....bar...", "...bar..."};
+    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "Perfect Week", "", "Completed 100 Goals", "Acheve1", "Acheve2"};
+    String mDescription[] = {"Completed your first goal", "Completed 3 daily goals consecutively", "", "Finished all goals in a week","", "", "....bar...", "...bar..."};
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
     int pgsMax[] = {20 , 7 , 13,1,3,5,3,5};
+    int pgsVisible[] = {0,1,1,1,1,1,1,1};
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("achievements");
 
@@ -114,11 +115,11 @@ public class AchievementsFragment extends Fragment {
         MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
         listview.setAdapter(adapter);
 
-        readRealtimeDatabaseValue();
+        //readRealtimeDatabaseValue();
 
        // System.out.println("Check Database Value");
 
-        getAchievementsItems();
+        //getAchievementsItems();
 
         return fragView;
     }
@@ -172,11 +173,17 @@ public class AchievementsFragment extends Fragment {
             pgsHolder.pgsBar.setMax(pgsMax[position]);
 
             //progress bar
-            setpgsBar(pgsHolder);
+            if(pgsVisible[position] == 1) {setpgsBar(pgsHolder);}
+            else {
+                //Log.d("visible == 0" , "position"+position);
+                pgsHolder.pgsBar.setVisibility(View.GONE);
+                pgsHolder.textview.setVisibility(View.INVISIBLE);
+            }
             return convertView;
         }
 
         public void setpgsBar(ProgressHolder pHolder){
+
             int i = pHolder.pgsBar.getProgress();
             i+=1;
             pHolder.pgsBar.setProgress(i);
