@@ -4,6 +4,7 @@ package com.example.timemakerapp;
 import android.content.Context;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.text.Layout;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
@@ -37,7 +38,12 @@ public class AchievementsFragment extends Fragment {
     Context mC;
     String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals"};
     String mDescription[] = {"Complete your first goal", "....bar...", "...bar..."};
+
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
+    String pgsDescription[] = {"0/20" , "0/7" , "0/13"};
+    int pgsMax[] = {20 , 7 , 13};
+
+
     private DatabaseReference mDatabase;
 
     /* Connection to Firebase Firestore to get achievements datas
@@ -80,7 +86,8 @@ public class AchievementsFragment extends Fragment {
         listview =(ListView) fragView.findViewById(R.id.listview);
         MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
         listview.setAdapter(adapter);
-        getAchievementsItems();
+
+       // getAchievementsItems();
         return fragView;
     }
 
@@ -93,6 +100,12 @@ public class AchievementsFragment extends Fragment {
         private String rTitle[];
         private String rDescription[];
         private int rImgs[];
+        private int progressStatus = 0;
+
+        private class ProgressHolder{
+            TextView textview;
+            ProgressBar pgsBar;
+        }
 
         MyAdapter(Context c, String title[], String description[], int imgs[])
         {
@@ -107,16 +120,35 @@ public class AchievementsFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            convertView = mInflater.inflate(achievements_row, null);
+            //set progressholder to null every time
+            ProgressHolder pgsHolder = null;
+
+            if (convertView == null){
+                convertView = mInflater.inflate(achievements_row, null);
+            }
+            //set id, position of image title, descriptiom
             ImageView images = convertView.findViewById(R.id.image1);
             TextView myTitle = convertView.findViewById(R.id.textview1);
             TextView myDescription = convertView.findViewById(R.id.textview2);
+            pgsHolder = new ProgressHolder();
+            pgsHolder.textview = convertView.findViewById(R.id.textview3);
+            pgsHolder.pgsBar = convertView.findViewById(R.id.pBar);
 
             images.setImageResource(rImgs[position]);
             myTitle.setText(rTitle[position]);
             myDescription.setText(rDescription[position]);
+            pgsHolder.pgsBar.setMax(pgsMax[position]);
 
+            //progress bar
+            setpgsBar(pgsHolder);
             return convertView;
+        }
+
+        public void setpgsBar(ProgressHolder pHolder){
+            int i = pHolder.pgsBar.getProgress();
+            i+=1;
+            pHolder.pgsBar.setProgress(i);
+            pHolder.textview.setText(i+"/"+pHolder.pgsBar.getMax());
         }
     }
 
