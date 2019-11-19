@@ -2,10 +2,12 @@ package com.example.timemakerapp;
 
 
 import android.content.Context;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.text.Layout;
+import android.util.Log;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 
@@ -16,8 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 import com.google.firebase.firestore.*;
 
 
@@ -36,23 +37,22 @@ public class AchievementsFragment extends Fragment {
 
     ListView listview;
     Context mC;
-    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "a","b", "c", "d","a","b", "c", "d"};
-    String mDescription[] = {"Complete your first goal", "....bar...", "...bar...",  "....bar...", "...bar...", "....bar...", "...bar...", "...bar...", "....bar...", "...bar..."};
-
-    int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice, R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
-    int pgsMax[] = {20 , 7 , 13,1,1,1,1,1,1,1};
+    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "First Use", "3 Days in a Row", "Completed 10 Goals", "3 Days in a Row", "Completed 10 Goals"};
+    String mDescription[] = {"Complete your first goal", "....bar...", "...bar...","Complete your first goal", "....bar...", "...bar...", "....bar...", "...bar..."};
+    int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
+    int pgsMax[] = {20 , 7 , 13,1,3,5,3,5};
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference().child("achievements");
 
 
     private DatabaseReference mDatabase;
 
-    /* Connection to Firebase Firestore to get achievements datas
+     //Connection to Firebase Firestore to get achievements datas
     private void getAchievementsItems() {
 
-
-
-
         FirebaseFirestore.getInstance()
-                .collection("users")
+                .collection(
+                        "users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -67,7 +67,32 @@ public class AchievementsFragment extends Fragment {
                     }
                 });
 
-    }*/
+    }
+
+    //Connectionn to Firebase Database
+    private void readRealtimeDatabaseValue(){
+
+        System.out.println("Check Database Value");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                System.out.println("Realtime Database Value is " + value);
+               // Log.d(, "Value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                System.out.println("Database Error " + error);
+               // Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
 
 
     public AchievementsFragment() {
@@ -89,7 +114,12 @@ public class AchievementsFragment extends Fragment {
         MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
         listview.setAdapter(adapter);
 
-       // getAchievementsItems();
+        readRealtimeDatabaseValue();
+
+       // System.out.println("Check Database Value");
+
+        getAchievementsItems();
+
         return fragView;
     }
 
@@ -128,7 +158,7 @@ public class AchievementsFragment extends Fragment {
             if (convertView == null){
                 convertView = mInflater.inflate(achievements_row, null);
             }
-            //set id, position of image title, descriptiom, progressbar
+            //set id, position of image title, descriptiom
             ImageView images = convertView.findViewById(R.id.image1);
             TextView myTitle = convertView.findViewById(R.id.textview1);
             TextView myDescription = convertView.findViewById(R.id.textview2);
