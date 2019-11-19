@@ -2,10 +2,12 @@ package com.example.timemakerapp;
 
 
 import android.content.Context;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.text.Layout;
+import android.util.Log;
 import android.widget.*;
 import androidx.fragment.app.Fragment;
 
@@ -16,8 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 import com.google.firebase.firestore.*;
 
 
@@ -40,6 +41,8 @@ public class AchievementsFragment extends Fragment {
     String mDescription[] = {"Complete your first goal", "....bar...", "...bar..."};
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
     int pgsMax[] = {20 , 7 , 13};
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference().child("achievements");
 
 
     private DatabaseReference mDatabase;
@@ -66,6 +69,31 @@ public class AchievementsFragment extends Fragment {
 
     }
 
+    //Connectionn to Firebase Database
+    private void readRealtimeDatabaseValue(){
+
+        System.out.println("Check Database Value");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                System.out.println("Realtime Database Value is " + value);
+               // Log.d(, "Value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                System.out.println("Database Error " + error);
+               // Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
 
     public AchievementsFragment() {
         // Required empty public constructor
@@ -86,7 +114,12 @@ public class AchievementsFragment extends Fragment {
         MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
         listview.setAdapter(adapter);
 
-       // getAchievementsItems();
+        readRealtimeDatabaseValue();
+
+       // System.out.println("Check Database Value");
+
+        getAchievementsItems();
+
         return fragView;
     }
 
