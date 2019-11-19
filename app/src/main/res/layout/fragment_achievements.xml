@@ -8,22 +8,12 @@
                                                    tools:context=".AchievementsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp" android:layout_marginLeft="32dp"
-            android:layout_marginTop="50dp" android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp" android:text="@string/title_achievements"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
     <ListView
-            android:layout_width="395dp"
-            android:layout_height="646dp" android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3"
             android:id="@+id/listview"
+            android:layout_width="395dp"
+            android:layout_height="646dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

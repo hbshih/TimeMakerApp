@@ -38,19 +38,18 @@ public class AchievementsFragment extends Fragment {
     Context mC;
     String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals"};
     String mDescription[] = {"Complete your first goal", "....bar...", "...bar..."};
-
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
-    String pgsDescription[] = {"0/20" , "0/7" , "0/13"};
     int pgsMax[] = {20 , 7 , 13};
 
 
     private DatabaseReference mDatabase;
 
-    /* Connection to Firebase Firestore to get achievements datas
+     //Connection to Firebase Firestore to get achievements datas
     private void getAchievementsItems() {
 
         FirebaseFirestore.getInstance()
-                .collection("users")
+                .collection(
+                        "users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -65,7 +64,7 @@ public class AchievementsFragment extends Fragment {
                     }
                 });
 
-    }*/
+    }
 
 
     public AchievementsFragment() {
