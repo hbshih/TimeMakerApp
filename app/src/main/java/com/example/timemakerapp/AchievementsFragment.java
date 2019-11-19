@@ -37,10 +37,10 @@ public class AchievementsFragment extends Fragment {
 
     ListView listview;
     Context mC;
-    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals"};
-    String mDescription[] = {"Complete your first goal", "....bar...", "...bar..."};
-    int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
-    int pgsMax[] = {20 , 7 , 13};
+    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "First Use", "3 Days in a Row", "Completed 10 Goals", "3 Days in a Row", "Completed 10 Goals"};
+    String mDescription[] = {"Complete your first goal", "....bar...", "...bar...","Complete your first goal", "....bar...", "...bar...", "....bar...", "...bar..."};
+    int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
+    int pgsMax[] = {20 , 7 , 13,1,3,5,3,5};
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("achievements");
 
