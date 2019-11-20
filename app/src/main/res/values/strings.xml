@@ -9,5 +9,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="confirmation_button">Ok</string>
+    <string name="previous_focus_title">Choose a previous task</string>
+    <string name="daily_task_achieved">Well done! You have completed today\'s focus. Come back tomorrow!</string>
+    <string name="pickOldTaskConfirmation">Do you want to choose this task as today\'s focus?</string>
 
 </resources>
