@@ -48,7 +48,8 @@
                     android:inputType="text"
                     android:paddingTop="16dp"
                     android:textColorHighlight="@color/yellow"
-                    android:textCursorDrawable="@drawable/color_cursor" />
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:typeface="normal" />
 
             <LinearLayout
                     android:id="@+id/focus_linearLayout"
@@ -90,7 +91,8 @@
                     android:background="@color/yellow"
                     android:minHeight="40dp"
                     android:text="@string/confirmation_button"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:onClick="createNewTask"/>
 
         </RelativeLayout>
 

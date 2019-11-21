@@ -15,8 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +62,7 @@ public class DashboardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final Context context = this.getContext();
 
+        mDailyFocusCard = view.findViewById(R.id.daily_focus_card);
         mRecyclerView = view.findViewById(R.id.recyclerview);
         mAdapter = new PrevTaskListAdapter(context, mPreviousTasks);
         mRecyclerView.setAdapter(mAdapter);
@@ -87,6 +92,13 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        Button mDailyTaskButton = view.findViewById(R.id.button);
+        mDailyTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewTask(v);
+            }
+        });
 
         //TODO: Get current task from database
 
@@ -94,4 +106,34 @@ public class DashboardFragment extends Fragment {
     }
 
 
+    public void createNewTask(final View view) {
+        //TODO: Add task to database
+
+        new AlertDialog.Builder(view.getContext())
+                .setTitle(R.string.pickFocusTitle)
+                .setMessage(R.string.pickTaskConfirmation)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        TextView dailyFocus = mDailyFocusCard.findViewById(R.id.daily_focus_text);
+                        CheckBox focusCheckbox = mDailyFocusCard.findViewById(R.id.checkBox);
+                        EditText enterFocus = mDailyFocusCard.findViewById(R.id.editText);
+                        Button focusButton = mDailyFocusCard.findViewById(R.id.button);
+
+                        enterFocus.setVisibility(View.INVISIBLE);
+                        focusButton.setVisibility(View.INVISIBLE);
+
+                        String newTask = enterFocus.getText().toString();
+                        dailyFocus.setText(newTask);
+                        dailyFocus.setVisibility(View.VISIBLE);
+                        focusCheckbox.setVisibility(View.VISIBLE);
+
+                        LinearLayout linearParent = (LinearLayout) mDailyFocusCard.getParent();
+                        CheckBox oldTaskCheckbox = linearParent.findViewById(R.id.prev_task_checkbox);
+                        oldTaskCheckbox.setEnabled(false);
+
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+
+    }
 }
