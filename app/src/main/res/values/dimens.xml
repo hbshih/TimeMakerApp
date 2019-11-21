@@ -13,4 +13,5 @@
     <dimen name="titleMargin">20dp</dimen>
     <!-- Buttons -->
     <dimen name="buttonHeight">60dp</dimen>
+    <dimen name="buttonRadius">12dp</dimen>
 </resources>
