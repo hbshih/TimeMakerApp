@@ -1,14 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".CalendarFragment">
-
+        android:background="@color/darkBlue"
+        tools:context=".CalendarFragment" >
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/title_calendar" />
 
-</FrameLayout>
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/lightBlue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
+                    android:layout_marginVertical="@dimen/titleMargin"
+                    android:text="Your Stats Goal"
+                    android:textSize="@dimen/title"
+                    android:textStyle="bold" />
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:orientation="horizontal">
+
+
+                <TextView
+                        android:id="@+id/goalsFailedNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="80dp"
+                        android:layout_marginLeft="80dp"
+                        android:layout_marginTop="40dp"
+                        android:text="2" />
+
+                <TextView
+                        android:id="@+id/goalsAchievedLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="62dp"
+                        android:layout_marginRight="62dp"
+                        android:text="Goals Achieved" />
+
+                <TextView
+                        android:id="@+id/goalsFailed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="37dp"
+                        android:layout_marginEnd="83dp"
+                        android:layout_marginRight="83dp"
+                        android:text="Goals Failed"
+                        tools:layout_editor_absoluteX="290dp"
+                        tools:layout_editor_absoluteY="301dp" />
+
+                <TextView
+                        android:id="@+id/goalsAchievedNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="78dp"
+                        android:layout_marginLeft="78dp"
+                        android:layout_marginTop="2dp"
+                        android:text="1" />
+
+                <ImageView
+                        android:id="@+id/checkedIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="23dp"
+                        android:layout_marginLeft="23dp"
+                        android:layout_marginBottom="68dp"
+                        android:src="@android:drawable/checkbox_on_background" />
+
+                <ImageView
+                        android:id="@+id/crossIcon"
+                        android:layout_width="21dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="23dp"
+                        android:layout_marginLeft="23dp"
+                        android:layout_marginTop="36dp"
+                        android:src="@android:drawable/ic_delete"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>

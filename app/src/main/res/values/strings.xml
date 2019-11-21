@@ -16,5 +16,6 @@
     <string name="pickFocusTitle">Daily Focus</string>
     <string name="delete_task_text">Do you want to delete this task from your list? You will not be able to attempt this task again!</string>
     <string name="delete_task_title">Delete Task</string>
+    <string name="goalStats">Your Goal Stats</string>
 
 </resources>

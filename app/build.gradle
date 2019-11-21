@@ -9,7 +9,7 @@ android {
     buildToolsVersion "29.0.0"
     defaultConfig {
         applicationId "com.example.timemakerapp"
-        minSdkVersion 16
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -44,6 +44,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.1.0' // Authentication
     implementation 'com.google.firebase:firebase-database:19.2.0' //Database
     implementation 'com.google.firebase:firebase-firestore:21.3.0' // CLoud Firestore
+    implementation 'com.applandeo:material-calendar-view:1.7.0' //Calendar
+
 }
 
 apply plugin: 'com.google.gms.google-services' // Firebase
