@@ -8,6 +8,15 @@
         tools:context=".CalendarFragment" >
     <!-- TODO: Update blank fragment layout -->
 
+  <!--  this cannot work <com.applandeo.materialcalendarview.CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="378dp"
+            android:layout_height="501dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" /> -->
+
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="180dp"
