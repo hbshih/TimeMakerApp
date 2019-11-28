@@ -26,6 +26,28 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import android.graphics.Color;
+
+
+import android.graphics.Color;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.timemakerapp.Utils.DrawableUtils;
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
+import com.applandeo.materialcalendarview.utils.DateUtils;
+
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
+
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -97,8 +119,43 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar, container, false);
+        View view = inflater.inflate(R.layout.fragment_calendar,container,false);
+
+        List<EventDay> events = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        events.add(new EventDay(calendar, R.drawable.sample_three_icons));
+//
+ //       events.add(new EventDay(calendar, new Drawable()));
+//or if you want to specify event label color
+        events.add(new EventDay(calendar, R.drawable.sample_three_icons, Color.parseColor("#228B22")));
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.add(Calendar.DAY_OF_MONTH, 10);
+        events.add(new EventDay(calendar1, R.drawable.sample_icon_2));
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.add(Calendar.DAY_OF_MONTH, 5);
+        events.add(new EventDay(calendar2, R.drawable.sample_icon_3));
+
+        Calendar calendar3 = Calendar.getInstance();
+        calendar3.add(Calendar.DAY_OF_MONTH, 7);
+        events.add(new EventDay(calendar3, R.drawable.sample_four_icons));
+
+        CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+
+        Calendar min = Calendar.getInstance();
+        min.add(Calendar.MONTH, -2);
+
+        Calendar max = Calendar.getInstance();
+        max.add(Calendar.MONTH, 2);
+
+        calendarView.setMinimumDate(min);
+        calendarView.setMaximumDate(max);
+
+        calendarView.setEvents(events);
+
+        return view;
     }
 
 }
