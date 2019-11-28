@@ -72,31 +72,6 @@ public class AchievementsFragment extends Fragment {
 
     }
 
-    //Connectionn to Firebase Database
-    private void readRealtimeDatabaseValue(){
-
-        System.out.println("Check Database Value");
-
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                 String value = dataSnapshot.getValue(String.class);
-                 System.out.println("Realtime Database Value is " + value);
-               // Log.d(, "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                System.out.println("Database Error " + error);
-               // Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-    }
-
 
     public AchievementsFragment() {
         // Required empty public constructor
@@ -116,10 +91,6 @@ public class AchievementsFragment extends Fragment {
         listview =(ListView) fragView.findViewById(R.id.listview);
         MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
         listview.setAdapter(adapter);
-
-        //readRealtimeDatabaseValue();
-
-       // System.out.println("Check Database Value");
 
         getAchievementsItems();
 
