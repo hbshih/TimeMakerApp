@@ -40,7 +40,7 @@ public class AchievementsFragment extends Fragment {
     String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "Perfect Week", "", "Completed 100 Goals", "Acheve1", "Acheve2"};
     String mDescription[] = {"Completed your first goal", "Completed 3 daily goals consecutively", "", "Finished all goals in a week","", "", "....bar...", "...bar..."};
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
-    int pgsMax[] = {20 , 7 , 13,1,3,5,3,5};
+    int pgsMax[] = {20,7,13,1,3,5,3,5};
     int pgsVisible[] = {0,1,1,1,1,1,1,1};
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("achievements");
@@ -50,6 +50,8 @@ public class AchievementsFragment extends Fragment {
 
      //Connection to Firebase Firestore to get achievements datas
     private void getAchievementsItems() {
+
+        System.out.println("Get Achievements...");
 
         FirebaseFirestore.getInstance()
                 .collection(
@@ -119,7 +121,7 @@ public class AchievementsFragment extends Fragment {
 
        // System.out.println("Check Database Value");
 
-        //getAchievementsItems();
+        getAchievementsItems();
 
         return fragView;
     }
