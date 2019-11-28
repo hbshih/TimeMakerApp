@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "816326287782-q9oveae9bb4f81sjbv4pttvuh4rhuag9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.timemakerapp",
+            "certificate_hash": "ca320a2abbfff5431acf84ba507751ce987ae4ab"
+          }
+        },
+        {
           "client_id": "816326287782-s86afnafpbvr2ebaosvpv3u2578kt8ai.apps.googleusercontent.com",
           "client_type": 3
         }
