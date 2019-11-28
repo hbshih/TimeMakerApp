@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services' // Firebase
 
 android {
     compileSdkVersion 29
@@ -42,9 +43,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     // add SDKs for any other desired Firebase products
     implementation 'com.google.firebase:firebase-auth:19.1.0' // Authentication
+    implementation 'com.google.firebase:firebase-analytics:17.2.1' // Authentication
+
+    implementation 'com.google.android.gms:play-services-auth:17.0.0' // Authentication google
+
     implementation 'com.google.firebase:firebase-database:19.2.0' //Database
     implementation 'com.google.firebase:firebase-firestore:21.3.0' // CLoud Firestore
 }
 
-apply plugin: 'com.google.gms.google-services' // Firebase
 
