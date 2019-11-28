@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -67,6 +69,9 @@ public class DashboardFragment extends Fragment {
         mAdapter = new PrevTaskListAdapter(context, mPreviousTasks);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         mDailyFocus = view.findViewById(R.id.daily_focus_text);
         mDailyTaskCheckbox = view.findViewById(R.id.checkBox);
