@@ -89,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                             TextView matchError = (TextView) findViewById(R.id.t_matchError);
                             matchError.setVisibility(View.GONE);
                             Toast.makeText(RegisterActivity.this, "Successfuly Register", Toast.LENGTH_SHORT).show();
-                            createNewUser(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getEmail());
+                            insertNewUser();
                         } else {
                             closeKeyboard();
                             // If sign in fails, display a message to the user.
@@ -102,14 +102,13 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    public void createNewUser(String _uid, String email) {
+    public void insertNewUser() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String uid = _uid;
 
         DocumentReference newUserRef = db.collection("users").document();
         User user = new User();
-        user.uid = uid;
-        user.email = email;
+        user.uid = mAuth.getCurrentUser().getUid();
+        user.email = mAuth.getCurrentUser().getEmail();
 
         Progress progress = new Progress();
         progress.setInitProgress();

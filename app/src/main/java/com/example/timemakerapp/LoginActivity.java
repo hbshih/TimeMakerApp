@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.timemakerapp.models.Progress;
+import com.example.timemakerapp.models.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -36,6 +38,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 
@@ -170,11 +174,16 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+
                 if (task.isSuccessful()) {
                     closeKeyboard();
                     Toast.makeText(LoginActivity.this, "Successful", Toast.LENGTH_SHORT).show();
                     //FirebaseUser user = mAuth.getCurrentUser();
                     //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext()); // account.getDisplayName)=;
+                    // Insert in database if new user
+                    if (task.getResult().getAdditionalUserInfo().isNewUser()){
+                        insertNewUser();
+                    }
                     Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(loginIntent);
                 } else {
@@ -230,7 +239,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()){
+                                insertNewUser();
+                            }
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }
@@ -238,6 +249,31 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+
+    public void insertNewUser() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference newUserRef = db.collection("users").document();
+        User user = new User();
+        user.uid = mAuth.getCurrentUser().getUid();
+        user.email = mAuth.getCurrentUser().getEmail();
+
+        Progress progress = new Progress();
+        progress.setInitProgress();
+        user.progress = progress;
+
+        newUserRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "User succesfully inserted");
+                } else {
+                    Log.d(TAG, "User failed insertion");
+
+                }
+            }
+        });
+    }
 
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
