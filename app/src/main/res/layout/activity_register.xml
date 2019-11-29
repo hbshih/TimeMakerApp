@@ -77,7 +77,7 @@
                         android:inputType="textPassword" />
 
                 <TextView
-                        android:id="@+id/t_matchError"
+                        android:id="@+id/t_errorRegister"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/error"

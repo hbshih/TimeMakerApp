@@ -15,23 +15,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.timemakerapp.models.Progress;
-import com.example.timemakerapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText email;
-    EditText password;
-    EditText password2;
-    Button register;
-    TextView navLogin;
+    EditText t_email;
+    EditText t_password;
+    EditText t_password2;
+    Button bt_register;
+    TextView t_navLogin;
+    TextView t_errorRegister;
+    private String TAG = "RegisterActivity";
+
     private FirebaseAuth mAuth;
-    private String TAG = "RegisterActivity: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,29 +38,31 @@ public class RegisterActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Init
-        email = (EditText) findViewById(R.id.i_email);
-        password = (EditText) findViewById(R.id.i_password);
-        password2 = (EditText) findViewById(R.id.i_password2);
-        register = (Button) findViewById(R.id.bt_register);
-        navLogin = (TextView) findViewById(R.id.t_navLogin);
+        t_email = (EditText) findViewById(R.id.i_email);
+        t_password = (EditText) findViewById(R.id.i_password);
+        t_password2 = (EditText) findViewById(R.id.i_password2);
+        bt_register = (Button) findViewById(R.id.bt_register);
+        t_navLogin = (TextView) findViewById(R.id.t_navLogin);
+        t_errorRegister = (TextView) findViewById(R.id.t_errorRegister);
 
-        register.setOnClickListener(new View.OnClickListener() {
+        bt_register.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                String auxPass = password.getText().toString();
-                String auxPass2 = password2.getText().toString();
+                String auxPass = t_password.getText().toString();
+                String auxPass2 = t_password2.getText().toString();
 
                 if (auxPass.equals(auxPass2)) {
-                    signUpUser(email.getText().toString(), auxPass);
+                    t_errorRegister.setVisibility(View.VISIBLE);
+                    signUpUser(t_email.getText().toString(), auxPass);
                 } else {
-                    TextView matchError = (TextView) findViewById(R.id.t_matchError);
-                    matchError.setVisibility(View.VISIBLE);
+                    t_errorRegister.setText("Passwords do not match");
+                    t_errorRegister.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        navLogin.setOnClickListener(new View.OnClickListener() {
+        t_navLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -83,50 +83,24 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "createUserWithEmail:success");
+                            Log.d(TAG, "createUserWithEmail:success");
                             //FirebaseUser user = mAuth.getCurrentUser();
                             closeKeyboard();
-                            TextView matchError = (TextView) findViewById(R.id.t_matchError);
-                            matchError.setVisibility(View.GONE);
+                            t_errorRegister.setVisibility(View.GONE);
                             Toast.makeText(RegisterActivity.this, "Successfuly Register", Toast.LENGTH_SHORT).show();
-                            insertNewUser();
+                            Intent loginIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                            startActivity(loginIntent);
                         } else {
                             closeKeyboard();
                             // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            t_errorRegister.setText(task.getException().getMessage());
+                            t_errorRegister.setVisibility(View.VISIBLE);
                         }
 
+                        // ...
                     }
                 });
-    }
-
-    public void insertNewUser() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference newUserRef = db.collection("users").document();
-        User user = new User();
-        user.uid = mAuth.getCurrentUser().getUid();
-        user.email = mAuth.getCurrentUser().getEmail().toLowerCase();
-
-        Progress progress = new Progress();
-        progress.setInitProgress();
-        user.progress = progress;
-
-        newUserRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Log.d(TAG, "User succesfully inserted");
-                    Intent loginIntent = new Intent(RegisterActivity.this, MainActivity.class);
-                    startActivity(loginIntent);
-                } else {
-                    Log.d(TAG, "User failed insertion");
-
-                }
-            }
-        });
     }
 
     private void closeKeyboard() {
