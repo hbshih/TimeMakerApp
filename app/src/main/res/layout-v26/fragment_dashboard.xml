@@ -12,11 +12,11 @@
     <androidx.cardview.widget.CardView
             android:id="@+id/daily_focus_card"
             android:layout_width="match_parent"
-            android:layout_height="185dp"
-            android:alpha="2"
+            android:layout_height="160dp"
             android:layout_marginHorizontal="@dimen/card_margin_horizontal"
             android:layout_marginTop="@dimen/card_margin_top"
             android:layout_marginBottom="@dimen/card_margin_bottom"
+            android:alpha="2"
             android:backgroundTint="@color/lightBlue"
             app:cardCornerRadius="4dp"
             app:cardElevation="4dp">
@@ -42,39 +42,42 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/daily_focus_title"
                     android:autofillHints="@string/focus_editText"
+                    android:backgroundTint="@color/yellow"
                     android:ems="10"
                     android:hint="@string/focus_editText"
                     android:inputType="text"
-                    android:paddingTop="16dp" />
+                    android:paddingTop="16dp"
+                    android:textColorHighlight="@color/yellow"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:typeface="normal" />
 
             <LinearLayout
+                    android:id="@+id/focus_linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/daily_focus_title"
                     android:layout_alignParentBottom="true"
                     android:orientation="horizontal"
-                    android:id="@+id/focus_linearLayout"
-                    android:paddingTop="16dp" >
+                    android:paddingTop="16dp">
 
                 <TextView
                         android:id="@+id/daily_focus_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
+                        android:layout_weight="1"
+                        android:textColor="@color/darkGrey"
                         android:textSize="18sp"
-                        android:visibility="invisible" />
+                        android:paddingLeft="8sp"
+                        android:paddingRight="4sp" />
 
                 <CheckBox
                         android:id="@+id/checkBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:paddingLeft="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingRight="8dp"
-                        android:text="@string/focus_checkbox"
+                        android:layout_marginEnd="8sp"
+                        android:buttonTint="@color/yellow"
                         android:textSize="18sp"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
             </LinearLayout>
 
@@ -83,13 +86,58 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/editText"
-                    android:background="@color/darkBlue"
-                    android:text="Button"
-                    android:visibility="visible" />
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/yellow"
+                    android:minHeight="40dp"
+                    android:text="@string/confirmation_button"
+                    android:visibility="visible"
+                    android:onClick="createNewTask"/>
 
         </RelativeLayout>
 
 
     </androidx.cardview.widget.CardView>
 
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/previous_focus_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+            android:layout_marginBottom="@dimen/card_margin_bottom"
+            android:alpha="2"
+            android:backgroundTint="@color/lightBlue"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimaryLight">
+
+            <TextView
+                    android:id="@+id/previous_focus_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/previous_focus_title"
+                    android:textColor="@color/darkGrey"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/previous_focus_title"
+                    android:paddingBottom="8sp">
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>
+
