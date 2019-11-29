@@ -41,13 +41,13 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
     // UI Elements
-    EditText email;
-    EditText password;
-    Button login;
-    ImageButton google;
-    ImageButton facebook;
-    TextView forgotPassword;
-    TextView navRegister;
+    EditText t_email;
+    EditText t_password;
+    Button bt_login;
+    ImageButton bt_google;
+    ImageButton bt_facebook;
+    TextView t_forgotPassword;
+    TextView t_navRegister;
     // Firebase
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -63,59 +63,37 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mAuth = FirebaseAuth.getInstance();
 
-        // Facebook Init
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-
-        mCallbackManager = CallbackManager.Factory.create();
-
-        LoginManager.getInstance().registerCallback(mCallbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_LONG).show();
-                        firebaseAuthWithFacebook(loginResult.getAccessToken());
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Toast.makeText(LoginActivity.this, "Login Cancel", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        Toast.makeText(LoginActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        setFacebookCB();
 
         // Init
-        email = findViewById(R.id.i_email);
-        password = findViewById(R.id.i_password);
-        login = findViewById(R.id.bt_login);
-        google = findViewById(R.id.bt_google);
-        facebook = findViewById(R.id.bt_facebook);
-        forgotPassword = findViewById(R.id.t_forgotPassword);
-        navRegister = findViewById(R.id.t_navRegister);
+        t_email = findViewById(R.id.i_email);
+        t_password = findViewById(R.id.i_password);
+        bt_login = findViewById(R.id.bt_login);
+        bt_google = findViewById(R.id.bt_google);
+        bt_facebook = findViewById(R.id.bt_facebook);
+        t_forgotPassword = findViewById(R.id.t_forgotPassword);
+        t_navRegister = findViewById(R.id.t_navRegister);
 
         // Set Listeners
-        login.setOnClickListener(new View.OnClickListener() {
+        bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onSignInEmail(email.getText().toString(), password.getText().toString());
+                onSignInEmail(t_email.getText().toString(), t_password.getText().toString());
             }
         });
-        google.setOnClickListener(new View.OnClickListener() {
+        bt_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSignInGoogle();
             }
         });
-        facebook.setOnClickListener(new View.OnClickListener() {
+        bt_facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
             }
         });
-        navRegister.setOnClickListener(new View.OnClickListener() {
+        t_navRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -123,6 +101,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    // ############ EMAIL ############
 
     private void onSignInEmail(String email, String password) {
         // Initialize Firebase Auth
@@ -148,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    // ############ GOOGLE ############
     private void onSignInGoogle() {
         //Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // Initialize Firebase Auth
@@ -204,6 +185,33 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
+    // ############ FACEBOOK ############
+    private void setFacebookCB(){
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+
+        mCallbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_LONG).show();
+                        firebaseAuthWithFacebook(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(LoginActivity.this, "Login Cancel", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Toast.makeText(LoginActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     private void firebaseAuthWithFacebook(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -222,13 +230,14 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            
+
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }
                     }
                 });
     }
+
 
     private void closeKeyboard() {
         View view = this.getCurrentFocus();

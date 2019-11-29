@@ -3,6 +3,7 @@ package com.example.timemakerapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -14,10 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.timemakerapp.models.Progress;
+import com.example.timemakerapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText email;
@@ -26,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button register;
     TextView navLogin;
     private FirebaseAuth mAuth;
+    private String TAG = "RegisterActivity: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                             TextView matchError = (TextView) findViewById(R.id.t_matchError);
                             matchError.setVisibility(View.GONE);
                             Toast.makeText(RegisterActivity.this, "Successfuly Register", Toast.LENGTH_SHORT).show();
-                            Intent loginIntent = new Intent(RegisterActivity.this, MainActivity.class);
-                            startActivity(loginIntent);
+                            createNewUser(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getEmail());
                         } else {
                             closeKeyboard();
                             // If sign in fails, display a message to the user.
@@ -93,15 +98,42 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
 
-                        // ...
                     }
                 });
     }
 
+    public void createNewUser(String _uid, String email) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String uid = _uid;
+
+        DocumentReference newUserRef = db.collection("users").document();
+        User user = new User();
+        user.uid = uid;
+        user.email = email;
+
+        Progress progress = new Progress();
+        progress.setInitProgress();
+        user.progress = progress;
+        
+        newUserRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "User succesfully inserted");
+                    Intent loginIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(loginIntent);
+                } else {
+                    Log.d(TAG, "User failed insertion");
+
+                }
+            }
+        });
+    }
+
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
-        if(view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
