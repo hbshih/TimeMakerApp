@@ -14,7 +14,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/loginFragment"
+            android:id="@+id/loginActivity"
             android:orientation="vertical"
             tools:context=".LoginFragment">
 
@@ -123,6 +123,7 @@
                             android:background="@color/facebook"
                             android:src="@drawable/ic_facebook"
                             />
+
                 </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
