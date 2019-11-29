@@ -171,7 +171,8 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGNGOOGLE_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInGoogleResult(task);
-        } mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
 
     }
 
@@ -222,7 +223,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            
+
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }
