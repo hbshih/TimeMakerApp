@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                             closeKeyboard();
                             // If sign in fails, display a message to the user.
                             //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Server Failed.",
+                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
         Progress progress = new Progress();
         progress.setInitProgress();
         user.progress = progress;
-        
+
         newUserRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
