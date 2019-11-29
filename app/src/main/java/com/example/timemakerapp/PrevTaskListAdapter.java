@@ -3,6 +3,7 @@ package com.example.timemakerapp;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +21,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Date;
 import java.util.LinkedList;
 
 public class PrevTaskListAdapter extends
         RecyclerView.Adapter<PrevTaskListAdapter.TaskViewHolder> {
 
-    private final LinkedList<String> mPrevTaskList;
+    private final LinkedList<DailyTask> mPrevTaskList;
+    private DailyTask currentTask;
     private LayoutInflater mInflater;
     private Context context;
 
-    public PrevTaskListAdapter(Context context, LinkedList<String> prevTaskList) {
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    public PrevTaskListAdapter(Context context, LinkedList<DailyTask> prevTaskList, DailyTask current) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
         this.mPrevTaskList = prevTaskList;
+        this.currentTask = current;
+
+        Log.d("Adapter", "task number" + mPrevTaskList.size());
     }
 
     @NonNull
@@ -46,9 +59,13 @@ public class PrevTaskListAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull final PrevTaskListAdapter.TaskViewHolder holder, int position) {
-        final String mCurrent = mPrevTaskList.get(position);
-        holder.prevTaskItemView.setText(mCurrent);
+        final DailyTask mCurrent = mPrevTaskList.get(position);
+        holder.prevTaskItemView.setText(mCurrent.getName());
         final PrevTaskListAdapter mAdapter = this;
+
+        if (currentTask != null){
+            holder.checkBox.setEnabled(false);
+        }
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -72,22 +89,31 @@ public class PrevTaskListAdapter extends
 
                                     holder.checkBox.setEnabled(false);
 
-                                    dailyFocus.setText(mCurrent);
+                                    dailyFocus.setText(mCurrent.getName());
                                     dailyFocus.setVisibility(View.VISIBLE);
                                     focusCheckbox.setVisibility(View.VISIBLE);
 
                                     mPrevTaskList.remove(mCurrent);
-                                    mAdapter.notifyDataSetChanged();
 
-                                    //TODO: Write current task to database
-
+                                    final DailyTask newTask = new DailyTask(mCurrent.getName(), new Date(),false);
+                                    db.collection("tasks").add(newTask).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                                            if (task.isSuccessful()){
+                                                DocumentReference doc = task.getResult();
+                                                newTask.setId(doc.getId());
+                                                mAdapter.setCurrentTask(newTask);
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    });
+                                    db.collection("tasks").document(mCurrent.getId())
+                                            .update("achieved", true);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null).show();
 
                     holder.checkBox.setChecked(false);
-                } else {
-
                 }
             }
         });
@@ -104,7 +130,8 @@ public class PrevTaskListAdapter extends
                                 mPrevTaskList.remove(mCurrent);
                                 mAdapter.notifyDataSetChanged();
 
-                                //TODO: Delete task from database
+                                db.collection("tasks").document(mCurrent.getId())
+                                        .update("achieved", true);
 
                             }
                         })
@@ -118,6 +145,10 @@ public class PrevTaskListAdapter extends
     @Override
     public int getItemCount() {
         return mPrevTaskList.size();
+    }
+
+    public void setCurrentTask(DailyTask newTask){
+        this.currentTask = newTask;
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {

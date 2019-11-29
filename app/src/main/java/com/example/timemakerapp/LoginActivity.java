@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginManager.getInstance().registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
-                    @Override
+
                     public void onSuccess(LoginResult loginResult) {
                         Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_LONG).show();
                         firebaseAuthWithFacebook(loginResult.getAccessToken());
