@@ -52,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
     ImageButton bt_facebook;
     TextView t_forgotPassword;
     TextView t_navRegister;
+    EditText t_recoverPassEmail;
+    Button bt_sendEmail;
+    TextView t_errorSendEmail;
+    TextView t_errorLogin;
+
     // Firebase
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -63,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Hide Keyboad
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mAuth = FirebaseAuth.getInstance();
 
@@ -77,6 +81,10 @@ public class LoginActivity extends AppCompatActivity {
         bt_facebook = findViewById(R.id.bt_facebook);
         t_forgotPassword = findViewById(R.id.t_forgotPassword);
         t_navRegister = findViewById(R.id.t_navRegister);
+        bt_sendEmail = findViewById(R.id.bt_sendEmail);
+        t_recoverPassEmail = findViewById(R.id.t_recoverPassEmail);
+        t_errorSendEmail = findViewById(R.id.t_errorSendEmail);
+        t_errorLogin = findViewById(R.id.t_errorLogin);
 
         // Set Listeners
         bt_login.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +112,19 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(registerIntent);
             }
         });
+        t_forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                findViewById(R.id.forgotPassLayout).setVisibility(View.VISIBLE);
+            }
+        });
+        bt_sendEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = t_recoverPassEmail.getText().toString();
+                forgottenPassword(email);
+            }
+        });
     }
 
     // ############ EMAIL ############
@@ -116,17 +137,19 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        closeKeyboard();
                         if (task.isSuccessful()) {
-                            //Log.d(TAG, "signInWithCredentialEmail:success");
+                            Log.d(TAG, "signInWithCredentialEmail:success");
+                            t_errorLogin.setVisibility(View.GONE);
                             Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(loginIntent);
                             // FirebaseUser user = mAuth.getCurrentUser();
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            //Log.d(TAG, "signInWithCredentialEmail:failed");
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "signInWithCredentialEmail:failed");
+                            t_errorLogin.setText(task.getException().getMessage());
+                            t_errorLogin.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -151,12 +174,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "REQUESTCODE" + requestCode);
 
         if (requestCode == RC_SIGNGOOGLE_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInGoogleResult(task);
-        } mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
 
     }
 
@@ -181,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                     //FirebaseUser user = mAuth.getCurrentUser();
                     //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext()); // account.getDisplayName)=;
                     // Insert in database if new user
-                    if (task.getResult().getAdditionalUserInfo().isNewUser()){
+                    if (task.getResult().getAdditionalUserInfo().isNewUser()) {
                         insertNewUser();
                     }
                     Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
@@ -196,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     // ############ FACEBOOK ############
-    private void setFacebookCB(){
+    private void setFacebookCB() {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         mCallbackManager = CallbackManager.Factory.create();
@@ -239,7 +262,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            if(task.getResult().getAdditionalUserInfo().isNewUser()){
+                            if (task.getResult().getAdditionalUserInfo().isNewUser()) {
                                 insertNewUser();
                             }
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -256,7 +279,7 @@ public class LoginActivity extends AppCompatActivity {
         DocumentReference newUserRef = db.collection("users").document();
         User user = new User();
         user.uid = mAuth.getCurrentUser().getUid();
-        user.email = mAuth.getCurrentUser().getEmail();
+        user.email = mAuth.getCurrentUser().getEmail().toLowerCase();
 
         Progress progress = new Progress();
         progress.setInitProgress();
@@ -265,7 +288,7 @@ public class LoginActivity extends AppCompatActivity {
         newUserRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Log.d(TAG, "User succesfully inserted");
                 } else {
                     Log.d(TAG, "User failed insertion");
@@ -275,6 +298,28 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void forgottenPassword(String email) {
+        Log.d(TAG, "THIS IS A TEST");
+
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        closeKeyboard();
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                            findViewById(R.id.forgotPassLayout).setVisibility(View.GONE);
+                            t_errorSendEmail.setVisibility(View.GONE);
+                            Toast.makeText(LoginActivity.this, "Email sent",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            t_errorSendEmail.setText(task.getException().getMessage());
+                            t_errorSendEmail.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+    }
+
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -282,4 +327,6 @@ public class LoginActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+
 }

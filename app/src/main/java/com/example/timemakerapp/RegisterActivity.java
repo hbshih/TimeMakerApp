@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         DocumentReference newUserRef = db.collection("users").document();
         User user = new User();
         user.uid = mAuth.getCurrentUser().getUid();
-        user.email = mAuth.getCurrentUser().getEmail();
+        user.email = mAuth.getCurrentUser().getEmail().toLowerCase();
 
         Progress progress = new Progress();
         progress.setInitProgress();
