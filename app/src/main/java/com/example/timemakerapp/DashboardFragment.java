@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -49,6 +50,7 @@ public class DashboardFragment extends Fragment {
     private DailyTask currentTask;
 
     private FirebaseFirestore db;
+    private String currentUser;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -59,6 +61,8 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d("userid", currentUser);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -92,13 +96,17 @@ public class DashboardFragment extends Fragment {
                         if(task.isSuccessful()){
                             for (QueryDocumentSnapshot doc : task.getResult()){
                                 Map<String,Object> taskMap = doc.getData();
+                                String taskUser = (String) taskMap.get("userId");
+
+                                if (!currentUser.equals(taskUser)){
+                                    continue;
+                                }
                                 String taskName = (String) taskMap.get("name");
                                 Date taskTime = ((Timestamp) taskMap.get("time")).toDate();
                                 boolean isAchieved = (boolean) taskMap.get("achieved");
-                                DailyTask dailyTask = new DailyTask(taskName, taskTime, isAchieved);
+                                DailyTask dailyTask = new DailyTask(taskName, taskTime, isAchieved, currentUser);
                                 dailyTask.setId(doc.getId());
 
-                                Log.d("TaskRead", dailyTask.getTime().toString());
                                 if (DateUtils.isToday(dailyTask.getTime().getTime())){
                                     currentTask = dailyTask;
                                 } else if (!dailyTask.isAchieved()) {
@@ -175,7 +183,8 @@ public class DashboardFragment extends Fragment {
                         String newTaskName = enterFocus.getText().toString();
                         closeKeyboard();
 
-                        DailyTask newTask = new DailyTask(newTaskName, false);
+                        Log.d("userid new task", currentUser);
+                        DailyTask newTask = new DailyTask(newTaskName, false, currentUser);
                         setDailyTaskLayout(newTask);
 
                         db.collection("tasks").document()

@@ -10,17 +10,20 @@ public class DailyTask {
     private Date mTimestamp;
     private boolean achieved;
     private String id = "";
+    private String userId;
 
-    public DailyTask(String name, boolean achieved){
+    public DailyTask(String name, boolean achieved, String user){
         mTaskName = name;
         mTimestamp = new Date();
         this.achieved = achieved;
+        this.userId = user;
     }
 
-    public DailyTask(String name, Date time, boolean achieved){
+    public DailyTask(String name, Date time, boolean achieved, String user){
         mTaskName = name;
         mTimestamp = time;
         this.achieved = achieved;
+        this.userId = user;
     }
 
     public DailyTask(){
@@ -46,4 +49,9 @@ public class DailyTask {
     public String getId(){
         return id;
     }
+
+    public String getUserId(){
+        return userId;
+    }
+
 }

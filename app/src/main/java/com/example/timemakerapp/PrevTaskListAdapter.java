@@ -95,7 +95,7 @@ public class PrevTaskListAdapter extends
 
                                     mPrevTaskList.remove(mCurrent);
 
-                                    final DailyTask newTask = new DailyTask(mCurrent.getName(), new Date(),false);
+                                    final DailyTask newTask = new DailyTask(mCurrent.getName(), new Date(),false, mCurrent.getUserId());
                                     db.collection("tasks").add(newTask).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentReference> task) {
