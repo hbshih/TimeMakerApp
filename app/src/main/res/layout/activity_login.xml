@@ -21,7 +21,7 @@
         <androidx.cardview.widget.CardView
                 android:id="@+id/cardLogin"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/card_margin_horizontal"
                 android:layout_marginTop="@dimen/card_margin_top"
@@ -47,9 +47,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/textHeight"
                         android:layout_marginVertical="10dp"
-
                         android:background="@color/white"
-                        android:hint="Please enter your email" />
+                        android:hint="Please enter your email"
+                        android:inputType="textEmailAddress"/>
 
                 <EditText
                         android:id="@+id/i_password"
@@ -57,8 +57,18 @@
                         android:layout_height="@dimen/textHeight"
                         android:layout_marginVertical="10dp"
                         android:background="@color/white"
-                        android:hint="Please enter your email"
+                        android:hint="Please enter your password"
                         android:inputType="textPassword" />
+
+                <TextView
+                        android:id="@+id/t_errorLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/textHeight"
+                        android:autoLink="web"
+                        android:gravity="center"
+                        android:textSize="@dimen/subtitle"
+                        android:textColor="@color/google"
+                        android:visibility="gone" />
 
                 <Button
                         android:id="@+id/bt_login"
@@ -76,6 +86,44 @@
                         android:gravity="center"
                         android:text="I forgot my password"
                         android:textSize="@dimen/subtitle" />
+
+                <LinearLayout
+                        android:id="@+id/forgotPassLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                    <EditText
+                            android:id="@+id/t_recoverPassEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/textHeight"
+                            android:layout_marginVertical="10dp"
+                            android:background="@color/white"
+                            android:hint="Please enter your email"
+                            android:inputType="textEmailAddress"
+                            />
+
+                    <TextView
+                            android:id="@+id/t_errorSendEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/textHeight"
+                            android:autoLink="web"
+                            android:gravity="center"
+                            android:textSize="@dimen/subtitle"
+                            android:textColor="@color/google"
+                            android:visibility="gone"/>
+
+                    <Button
+                            android:id="@+id/bt_sendEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/buttonHeight"
+                            android:layout_marginVertical="10dp"
+                            android:backgroundTint="@color/yellow"
+                            android:text="Send email"
+                            />
+
+                </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
