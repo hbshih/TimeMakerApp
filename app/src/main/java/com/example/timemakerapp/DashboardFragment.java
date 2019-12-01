@@ -143,6 +143,10 @@ public class DashboardFragment extends Fragment {
                                                         mDailyFocus.setText(R.string.daily_task_achieved);
                                                         Toast.makeText(context, "Nice job!", Toast.LENGTH_SHORT).show();
 
+                                                        if (mAdapter.getCurrentTask() !=  null){
+                                                            currentTask = mAdapter.getCurrentTask();
+                                                        }
+
                                                         db.collection("tasks").document(currentTask.getId())
                                                                 .update("achieved", true);
                                                     }})

@@ -151,6 +151,10 @@ public class PrevTaskListAdapter extends
         this.currentTask = newTask;
     }
 
+    public DailyTask getCurrentTask(){
+        return this.currentTask;
+    }
+
     class TaskViewHolder extends RecyclerView.ViewHolder {
         public final TextView prevTaskItemView;
         public final CheckBox checkBox;
