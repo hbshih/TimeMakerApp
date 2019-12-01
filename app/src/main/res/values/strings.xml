@@ -16,7 +16,11 @@
     <string name="pickFocusTitle">Daily Focus</string>
     <string name="delete_task_text">Do you want to delete this task from your list? You will not be able to attempt this task again!</string>
     <string name="delete_task_title">Delete Task</string>
+    <string name="your_stats_goal">Your Stats Goal</string>
+
     <!-- Facebook Login-->
-    <string name="facebook_app_id">537884610101794</string> <string name="fb_login_protocol_scheme">fb537884610101794</string>
+    <string name="facebook_app_id">537884610101794</string>
+    <string name="fb_login_protocol_scheme">fb537884610101794</string>
+
 
 </resources>
