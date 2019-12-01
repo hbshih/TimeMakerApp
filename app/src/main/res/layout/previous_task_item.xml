@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp">
+
+
+    <CheckBox
+            android:id="@+id/prev_task_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8sp"
+            android:layout_marginRight="8sp"
+            android:buttonTint="@color/yellow"
+            android:layout_gravity="center_vertical"/>
+
+    <TextView
+            android:id="@+id/previous_task"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/darkGrey"
+            android:textSize="16sp"
+            android:paddingLeft="4sp"
+            android:paddingRight="4sp"
+            android:layout_gravity="center_vertical"/>
+
+    <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:layout_gravity="center_vertical"
+            android:backgroundTint="@color/lightBlue"/>
+
+</LinearLayout>

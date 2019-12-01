@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:816326287782:android:9cae665f85bc24f4e1af67",
+        "mobilesdk_app_id": "1:816326287782:android:0dc47e0702ff2b07e1af67",
         "android_client_info": {
           "package_name": "com.example.timemakerapp"
         }
@@ -22,6 +22,35 @@
             "certificate_hash": "ca320a2abbfff5431acf84ba507751ce987ae4ab"
           }
         },
+        {
+          "client_id": "816326287782-s86afnafpbvr2ebaosvpv3u2578kt8ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgaGPLYoIYxgAv_NsQSZhArv-AygWiikE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816326287782-s86afnafpbvr2ebaosvpv3u2578kt8ai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816326287782:android:5b45f448e0750545e1af67",
+        "android_client_info": {
+          "package_name": "com.kth.timemakerapp"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "816326287782-s86afnafpbvr2ebaosvpv3u2578kt8ai.apps.googleusercontent.com",
           "client_type": 3
