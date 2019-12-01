@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.timemakerapp.R.layout.achievements_row;
 
@@ -37,30 +38,59 @@ public class AchievementsFragment extends Fragment {
 
     ListView listview;
     Context mC;
-    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "Perfect Week", "", "Completed 100 Goals", "Acheve1", "Acheve2"};
-    String mDescription[] = {"Completed your first goal", "Completed 3 daily goals consecutively", "", "Finished all goals in a week","", "", "....bar...", "...bar..."};
+    String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "Perfect Week", "Completed 100 Goals"};
+   // String mDescription[] = {"Completed your first goal", "Completed 3 daily goals consecutively", "", "Finished all goals in a week","", "", "....bar...", "...bar..."};
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
-    int pgsMax[] = {20 , 7 , 13,1,3,5,3,5};
-    int pgsVisible[] = {0,1,1,1,1,1,1,1};
+    //int pgsMax[] = {20,7,13};
+    //int pgsVisible[] = {0,1,1};
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("achievements");
+    List<AchievementsItem> Achieves;
+
 
 
     private DatabaseReference mDatabase;
-
-     //Connection to Firebase Firestore to get achievements datas
+    // class for achievements from firebase
+    private class AchievementsItem {
+        public AchievementsItem(String t,String s, int m , int o){
+            this.title = t; this.subtitle = s; this.max = m; this.order = o;
+        }
+        public String title;
+        public String subtitle;
+        public int max;
+        public int order;
+    }
+    //Connection to Firebase Firestore to get achievements datas
     private void getAchievementsItems() {
 
+
+        System.out.println("Get Achievements...");
+        //final List<AchievementsItem> Achieves = new ArrayList<>();
         FirebaseFirestore.getInstance()
                 .collection(
-                        "users")
+                        "achievements")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@Nonnull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            List<DocumentSnapshot> myListOfDocuments = task.getResult().getDocuments();
-                            System.out.println("OnSuccess : " + myListOfDocuments);
+                          //  List<DocumentSnapshot> myListOfDocuments = task.getResult();
+                            //System.out.println("OnSuccess : " + myListOfDocuments);
+                            Achieves = new ArrayList<>();
+                            for (QueryDocumentSnapshot doc : task.getResult()){
+                                Map<String,Object> taskMap = doc.getData();
+                                String title = (String) taskMap.get("title");
+                                String subtitle = (String) taskMap.get("subtitle");
+                                int  max = ((Number)taskMap.get("max")).intValue();
+                                int order = ((Number)taskMap.get("order")).intValue();
+                                //System.out.println("Read Achievements : " +title+" "+max+" "+order+" ");
+                                Achieves.add(new AchievementsItem(title, subtitle , max , order));
+                            }
+
+                            //for(AchievementsItem i :Achieves){System.out.println("Read Achievements : " +i.title);}
+                            MyAdapter adapter = new MyAdapter(getActivity(), mTitle, images, Achieves);
+                            listview.setAdapter(adapter);
+
                         }else
                         {
                             System.out.println("Query Failed");
@@ -68,36 +98,13 @@ public class AchievementsFragment extends Fragment {
                     }
                 });
 
-    }
 
-    //Connectionn to Firebase Database
-    private void readRealtimeDatabaseValue(){
-
-        System.out.println("Check Database Value");
-
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                System.out.println("Realtime Database Value is " + value);
-               // Log.d(, "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                System.out.println("Database Error " + error);
-               // Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
     }
 
 
     public AchievementsFragment() {
         // Required empty public constructor
+
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,16 +117,14 @@ public class AchievementsFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View fragView = inflater.inflate(R.layout.fragment_achievements, container, false);
-
         listview =(ListView) fragView.findViewById(R.id.listview);
-        MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images);
-        listview.setAdapter(adapter);
 
-        //readRealtimeDatabaseValue();
+        //get firestore data
+        getAchievementsItems();
+        //MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images, Achieves);
+        //listview.setAdapter(adapter);
 
-       // System.out.println("Check Database Value");
 
-        //getAchievementsItems();
 
         return fragView;
     }
@@ -133,26 +138,31 @@ public class AchievementsFragment extends Fragment {
         private String rTitle[];
         private String rDescription[];
         private int rImgs[];
-        private int progressStatus = 0;
+        private List<AchievementsItem> rDBdata;
 
         private class ProgressHolder{
             TextView textview;
             ProgressBar pgsBar;
         }
 
-        MyAdapter(Context c, String title[], String description[], int imgs[])
+        MyAdapter(Context c, String title[], int imgs[], List<AchievementsItem> DBdata)
         {
             super(c, R.layout.achievements_row, R.id.textview1, title);
             this.context = c;
             this.rTitle = title;
-            this.rDescription = description;
+            //this.rDescription = description;
             this.rImgs = imgs;
+            System.out.println("Update Achievements : " +DBdata.size());
+            this.rDBdata = new ArrayList<AchievementsItem>(DBdata);
+            for(AchievementsItem i :rDBdata){System.out.println("Update Achievements : " +i.title);}
             mInflater = LayoutInflater.from(context);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+
+            System.out.println("Get Views...");
             //set progressholder to null every time
             ProgressHolder pgsHolder = null;
 
@@ -168,26 +178,27 @@ public class AchievementsFragment extends Fragment {
             pgsHolder.pgsBar = convertView.findViewById(R.id.pBar);
 
             images.setImageResource(rImgs[position]);
-            myTitle.setText(rTitle[position]);
-            myDescription.setText(rDescription[position]);
-            pgsHolder.pgsBar.setMax(pgsMax[position]);
+            myTitle.setText(rDBdata.get(position).title);
+            myDescription.setText(rDBdata.get(position).subtitle);
+            pgsHolder.pgsBar.setMax(rDBdata.get(position).max);
 
-            //progress bar
-            if(pgsVisible[position] == 1) {setpgsBar(pgsHolder);}
+            //update achievements status from firestore DB
+
+            if(rDBdata.get(position).max != -1) {updateAchievements(pgsHolder, position);}
             else {
-                //Log.d("visible == 0" , "position"+position);
                 pgsHolder.pgsBar.setVisibility(View.GONE);
                 pgsHolder.textview.setVisibility(View.INVISIBLE);
             }
             return convertView;
         }
 
-        public void setpgsBar(ProgressHolder pHolder){
+        private void updateAchievements(ProgressHolder pHolder, int pos){
 
-            int i = pHolder.pgsBar.getProgress();
-            i+=1;
-            pHolder.pgsBar.setProgress(i);
-            pHolder.textview.setText(i+"/"+pHolder.pgsBar.getMax());
+
+            System.out.println("Update Achievements : " +rDBdata.get(pos).title);
+            pHolder.pgsBar.setProgress(rDBdata.get(pos).order);
+            pHolder.textview.setText(rDBdata.get(pos).order+"/"+rDBdata.get(pos).max);
+
         }
     }
 
