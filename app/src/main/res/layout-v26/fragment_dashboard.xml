@@ -38,18 +38,17 @@
 
             <EditText
                     android:id="@+id/editText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
                     android:layout_below="@id/daily_focus_title"
                     android:autofillHints="@string/focus_editText"
-                    android:backgroundTint="@color/yellow"
-                    android:ems="10"
                     android:hint="@string/focus_editText"
                     android:inputType="text"
-                    android:paddingTop="16dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@color/white"
                     android:textColorHighlight="@color/yellow"
-                    android:textCursorDrawable="@drawable/color_cursor"
-                    android:typeface="normal" />
+                    android:textCursorDrawable="@drawable/color_cursor" />
 
             <LinearLayout
                     android:id="@+id/focus_linearLayout"
@@ -87,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/editText"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@color/yellow"
                     android:minHeight="40dp"
                     android:text="@string/confirmation_button"
