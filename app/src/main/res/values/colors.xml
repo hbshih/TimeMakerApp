@@ -12,4 +12,5 @@
     <color name="facebook">#3B5998</color>
     <color name="google">#dd4b39</color>
     <color name="error">#d9534f</color>
+    <color name="danger">#d9534f</color>
 </resources>
