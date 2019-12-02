@@ -1,62 +1,33 @@
 package com.example.timemakerapp;
 
 
-import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.TextView;
 
-import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
-import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
-
-import android.graphics.Color;
-
-
-import android.graphics.Color;
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.timemakerapp.Utils.DrawableUtils;
-import com.applandeo.materialcalendarview.CalendarView;
-import com.applandeo.materialcalendarview.EventDay;
-import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
-
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 
 
 /**
@@ -73,6 +44,7 @@ public class CalendarFragment extends Fragment {
 
     private CalendarView calendarView;
     private TextView failedTasksTextView, achievedTasksTextView;
+    private CardView c_dayInfo;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -84,27 +56,37 @@ public class CalendarFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calendar,container,false);
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
         achievedTasksTextView = view.findViewById(R.id.goalsAchievedNumber);
         failedTasksTextView = view.findViewById(R.id.goalsFailedNumber);
+        c_dayInfo = view.findViewById(R.id.c_dayInfo);
+
+        createDayListener(view);
 
         getUserTasks();
 
         return view;
     }
 
-    private void setupCalendar(){
+    private void createDayListener(View view) {
+        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+        calendarView.setOnDayClickListener(eventDay -> {
+            this.c_dayInfo.setVisibility(View.VISIBLE);
+        });
+    }
+
+    private void setupCalendar() {
         List<EventDay> events = new ArrayList<>();
 
-        for (DailyTask task : userTasks){
+        for (DailyTask task : userTasks) {
             //TODO: Create event and add to events list
 
             /*
@@ -138,11 +120,11 @@ public class CalendarFragment extends Fragment {
                     @Override
                     public void onComplete(@Nonnull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()){
-                                Map<String,Object> taskMap = doc.getData();
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                Map<String, Object> taskMap = doc.getData();
                                 String taskUser = (String) taskMap.get("userId");
 
-                                if (!currentUser.equals(taskUser)){
+                                if (!currentUser.equals(taskUser)) {
                                     continue;
                                 }
                                 String taskName = (String) taskMap.get("name");
@@ -153,7 +135,7 @@ public class CalendarFragment extends Fragment {
 
                                 userTasks.add(dailyTask);
 
-                                if (isAchieved){
+                                if (isAchieved) {
                                     total_achieved++;
                                 } else {
                                     total_failed++;
@@ -165,8 +147,7 @@ public class CalendarFragment extends Fragment {
 
                             setupCalendar();
 
-                        }else
-                        {
+                        } else {
                             Log.d("loading calendar tasks", task.getException().getMessage());
                         }
                     }
