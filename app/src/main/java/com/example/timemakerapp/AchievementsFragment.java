@@ -81,19 +81,31 @@ public class AchievementsFragment extends Fragment {
                             currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             insertNewUser(task, currentUser);
                             Achieves = new ArrayList<>();
+                            //List<AchievementsItem> progress = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : task.getResult()){
                                 Map<String,Object> taskMap = doc.getData();
                                 String title = (String) taskMap.get("title");
                                 String subtitle = (String) taskMap.get("subtitle");
                                 int  max = ((Number)taskMap.get("max")).intValue();
-                                //int order = ((Number)taskMap.get("order")).intValue();
-                                //System.out.println("Read Achievements : " +title+" "+max+" "+order+" ");
-                                //Achieves.add(new AchievementsItem(title, subtitle , max , order));
+                                int progress = -1;
+                                Map<String,Object> order = (Map<String,Object> )taskMap.get("order");
+                                for (Map.Entry<String, Object> entry : order.entrySet()) {
+                                    String k = entry.getKey();
+                                    if(k.equals(currentUser)) {
+                                        progress = ((Number) entry.getValue()).intValue();
+                                        System.out.println("OnSuccess progress:" +progress);
+                                        break;
+                                    }
+                                    else continue;
+                                }
+
+                                System.out.println("Read Achievements : " +title+" "+max+" "+progress+" ");
+                                Achieves.add(new AchievementsItem(title, subtitle , max , progress));
                             }
 
                             //for(AchievementsItem i :Achieves){System.out.println("Read Achievements : " +i.title);}
-                            //MyAdapter adapter = new MyAdapter(getActivity(), mTitle, images, Achieves);
-                            //listview.setAdapter(adapter);
+                            MyAdapter adapter = new MyAdapter(getActivity(), mTitle, images, Achieves);
+                            listview.setAdapter(adapter);
 
                         }else
                         {
