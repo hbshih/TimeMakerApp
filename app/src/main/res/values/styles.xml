@@ -13,7 +13,7 @@
         <item name="android:textColor">@color/title_bar</item>
     </style>
 
-    <style name="AppTheme.YellowAccent">
-        <item name="colorAccent">@color/colorAccent</item> <!-- Whatever color you want-->
+    <style name="AppTheme.GreyAccent">
+        <item name="colorAccent">@color/colorPrimaryDark</item> <!-- Whatever color you want-->
     </style>
 </resources>

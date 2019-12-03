@@ -125,7 +125,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"
-            android:theme="@style/AppTheme.YellowAccent"
+            android:theme="@style/AppTheme.GreyAccent"
             />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
