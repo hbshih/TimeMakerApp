@@ -6,11 +6,10 @@
 >
 
     <ImageView
+            android:id="@+id/image1"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:src = "@mipmap/ic_launcher"
-            android:id = "@+id/image1"
-    />
+            android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
             android:layout_width="match_parent"

@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.*;
 import com.google.firebase.firestore.*;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 import javax.annotation.Nonnull;
@@ -27,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import static com.example.timemakerapp.R.layout.achievements_row;
 
@@ -39,14 +41,14 @@ public class AchievementsFragment extends Fragment {
     ListView listview;
     Context mC;
     String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "Perfect Week", "Completed 100 Goals"};
-   // String mDescription[] = {"Completed your first goal", "Completed 3 daily goals consecutively", "", "Finished all goals in a week","", "", "....bar...", "...bar..."};
+    // String mDescription[] = {"Completed your first goal", "Completed 3 daily goals consecutively", "", "Finished all goals in a week","", "", "....bar...", "...bar..."};
     int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
     //int pgsMax[] = {20,7,13};
     //int pgsVisible[] = {0,1,1};
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("achievements");
     List<AchievementsItem> Achieves;
-
+    private String currentUser;
 
 
     private DatabaseReference mDatabase;
@@ -74,22 +76,24 @@ public class AchievementsFragment extends Fragment {
                     @Override
                     public void onComplete(@Nonnull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                          //  List<DocumentSnapshot> myListOfDocuments = task.getResult();
+                            //  List<DocumentSnapshot> myListOfDocuments = task.getResult();
                             //System.out.println("OnSuccess : " + myListOfDocuments);
+                            currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            insertNewUser(task, currentUser);
                             Achieves = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : task.getResult()){
                                 Map<String,Object> taskMap = doc.getData();
                                 String title = (String) taskMap.get("title");
                                 String subtitle = (String) taskMap.get("subtitle");
                                 int  max = ((Number)taskMap.get("max")).intValue();
-                                int order = ((Number)taskMap.get("order")).intValue();
+                                //int order = ((Number)taskMap.get("order")).intValue();
                                 //System.out.println("Read Achievements : " +title+" "+max+" "+order+" ");
-                                Achieves.add(new AchievementsItem(title, subtitle , max , order));
+                                //Achieves.add(new AchievementsItem(title, subtitle , max , order));
                             }
 
                             //for(AchievementsItem i :Achieves){System.out.println("Read Achievements : " +i.title);}
-                            MyAdapter adapter = new MyAdapter(getActivity(), mTitle, images, Achieves);
-                            listview.setAdapter(adapter);
+                            //MyAdapter adapter = new MyAdapter(getActivity(), mTitle, images, Achieves);
+                            //listview.setAdapter(adapter);
 
                         }else
                         {
@@ -101,7 +105,35 @@ public class AchievementsFragment extends Fragment {
 
     }
 
+    private void insertNewUser(Task<QuerySnapshot> task, String currentUser){
+        //check new user
+        boolean NewUser = true;
+        for (QueryDocumentSnapshot doc : task.getResult()){
+            Map<String,Object> taskMap = doc.getData();
+            Map<String,Object> order =  (Map<String,Object> )taskMap.get("order");
+            for (Map.Entry<String, Object> entry : order.entrySet()) {
+                String k = entry.getKey();
+                System.out.println("OnSuccess : " + currentUser);
+                if(k == currentUser){
+                    NewUser = false;
+                    break;
+                }
+            }
+            break;
 
+        }
+
+        if(NewUser){
+            Map<String, Object> newOrder = new HashMap<>();
+            Map<String, Object> newOrders = new HashMap<>();
+            newOrder.put(currentUser, 0);
+            newOrders.put("order", newOrder);
+
+            for (QueryDocumentSnapshot doc : task.getResult()) {
+                FirebaseFirestore.getInstance().collection("achievements").document(doc.getId()).set(newOrders, SetOptions.merge());
+            }
+        }
+    }
     public AchievementsFragment() {
         // Required empty public constructor
 
