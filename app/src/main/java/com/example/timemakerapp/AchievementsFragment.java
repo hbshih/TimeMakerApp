@@ -93,12 +93,11 @@ public class AchievementsFragment extends Fragment {
                                     String k = entry.getKey();
                                     if(k.equals(currentUser)) {
                                         progress = ((Number) entry.getValue()).intValue();
-                                        System.out.println("OnSuccess progress:" +progress);
                                         break;
                                     }
                                     else continue;
                                 }
-
+                                if(progress > max) progress = max;
                                 System.out.println("Read Achievements : " +title+" "+max+" "+progress+" ");
                                 Achieves.add(new AchievementsItem(title, subtitle , max , progress));
                             }
@@ -126,7 +125,7 @@ public class AchievementsFragment extends Fragment {
             for (Map.Entry<String, Object> entry : order.entrySet()) {
                 String k = entry.getKey();
                 System.out.println("OnSuccess : " + currentUser);
-                if(k == currentUser){
+                if(k.equals(currentUser)){
                     NewUser = false;
                     break;
                 }
