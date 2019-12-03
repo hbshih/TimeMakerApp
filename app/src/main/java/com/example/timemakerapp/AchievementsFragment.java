@@ -33,6 +33,9 @@ import java.util.HashMap;
 import static com.example.timemakerapp.R.layout.achievements_row;
 
 
+
+
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -49,7 +52,7 @@ public class AchievementsFragment extends Fragment {
     DatabaseReference myRef = database.getReference().child("achievements");
     List<AchievementsItem> Achieves;
     private String currentUser;
-
+    private String TAG = "AchievementActivity";
 
     private DatabaseReference mDatabase;
     // class for achievements from firebase
@@ -131,7 +134,6 @@ public class AchievementsFragment extends Fragment {
                 }
             }
             break;
-
         }
 
         if(NewUser){
@@ -139,12 +141,15 @@ public class AchievementsFragment extends Fragment {
             Map<String, Object> newOrders = new HashMap<>();
             newOrder.put(currentUser, 0);
             newOrders.put("order", newOrder);
-
             for (QueryDocumentSnapshot doc : task.getResult()) {
                 FirebaseFirestore.getInstance().collection("achievements").document(doc.getId()).set(newOrders, SetOptions.merge());
             }
         }
     }
+
+
+
+
     public AchievementsFragment() {
         // Required empty public constructor
 
@@ -219,6 +224,7 @@ public class AchievementsFragment extends Fragment {
             pgsHolder = new ProgressHolder();
             pgsHolder.textview = convertView.findViewById(R.id.textview3);
             pgsHolder.pgsBar = convertView.findViewById(R.id.pBar);
+            LinearLayout progressBarView = convertView.findViewById(R.id.progressBarView);
 
             images.setImageResource(rImgs[position]);
             myTitle.setText(rDBdata.get(position).title);
@@ -229,8 +235,7 @@ public class AchievementsFragment extends Fragment {
 
             if(rDBdata.get(position).max != -1) {updateAchievements(pgsHolder, position);}
             else {
-                pgsHolder.pgsBar.setVisibility(View.GONE);
-                pgsHolder.textview.setVisibility(View.INVISIBLE);
+                progressBarView.setVisibility(View.INVISIBLE);
             }
             return convertView;
         }

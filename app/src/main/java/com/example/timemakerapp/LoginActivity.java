@@ -43,6 +43,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 
+
 public class LoginActivity extends AppCompatActivity {
     // UI Elements
     EditText t_email;
@@ -63,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
     private int RC_SIGNGOOGLE_IN = 9001;
     private String TAG = "LoginActivity";
     private CallbackManager mCallbackManager;
+
+    //achievement initialization
+    private AchievementDBupdater Achieveupdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Insert in database if new user
                     if (task.getResult().getAdditionalUserInfo().isNewUser()) {
                         insertNewUser();
+
                     }
                     Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(loginIntent);
@@ -296,6 +301,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        //insert new achievement entry with user
     }
 
     private void forgottenPassword(String email) {
