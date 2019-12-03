@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,16 +69,16 @@ public class CalendarFragment extends Fragment {
         achievedTasksTextView = view.findViewById(R.id.goalsAchievedNumber);
         failedTasksTextView = view.findViewById(R.id.goalsFailedNumber);
         c_dayInfo = view.findViewById(R.id.c_dayInfo);
-
-        createDayListener(view);
+        calendarView = view.findViewById(R.id.calendarView);
 
         getUserTasks();
+
+        createDayListener(view);
 
         return view;
     }
 
     private void createDayListener(View view) {
-        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
         calendarView.setOnDayClickListener(eventDay -> {
             this.c_dayInfo.setVisibility(View.VISIBLE);
         });
@@ -87,7 +88,17 @@ public class CalendarFragment extends Fragment {
         List<EventDay> events = new ArrayList<>();
 
         for (DailyTask task : userTasks) {
-            //TODO: Create event and add to events list
+            Date taskDate = task.getTime();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(taskDate);
+            Log.d("Event Time",calendar.get(Calendar.YEAR) + "YY" + calendar.get(Calendar.MONTH) + "MM" + calendar.get(Calendar.DAY_OF_MONTH));
+
+            if (task.isAchieved()){
+                events.add(new EventDay(calendar, R.drawable.sample_icon_2));
+            }
+            else{
+                events.add(new EventDay(calendar, R.drawable.sample_icon_3));
+            }
 
             /*
             Calendar calendar = Calendar.getInstance();
