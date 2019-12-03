@@ -132,9 +132,10 @@ public class CalendarFragment extends Fragment {
                                     addFailedEvents(events,taskEvent.getTime());
                                     System.out.println("failed added");
                                 }
-                                System.out.println(allTasks.get(num));
                             }
 
+                            CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+                            calendarView.setEvents(events);
 
                         }
 
@@ -152,10 +153,9 @@ public class CalendarFragment extends Fragment {
 
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(date.getYear()+1900,date.getMonth(),date.getDate());
-        events.add(new EventDay(calendar1, R.drawable.sample_icon_1));
-        System.out.println("success added, masuk ke voidnya");
-
-        System.out.println("dalem void"+ date.getYear()+ "YY" + date.getMonth() + "MM" + date.getDate());
+        events.add(new EventDay(calendar1, R.drawable.sample_icon_2));
+        System.out.println("success added, add to success void");
+        System.out.println("in success void"+ (date.getYear()+1900)+ "YY" + date.getMonth() + "MM" + date.getDate());
 
 
 
@@ -164,7 +164,10 @@ public class CalendarFragment extends Fragment {
     private void addFailedEvents(List<EventDay> events,Date date) {
         Calendar calendar2 = Calendar.getInstance();
         calendar2.set(date.getYear()+1900,date.getMonth(),date.getDate());
-        events.add(new EventDay(calendar2, R.drawable.sample_icon_2));
+        events.add(new EventDay(calendar2, R.drawable.sample_icon_3));
+        System.out.println("success added, add to failed void");
+        System.out.println("in failed void"+ (date.getYear()+1900)+ "YY" + date.getMonth() + "MM" + date.getDate());
+
     }
 
     private DailyTask getTasks(LinkedList<DailyTask> TaskList, int num){
