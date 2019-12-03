@@ -21,6 +21,7 @@
     <!-- Facebook Login-->
     <string name="facebook_app_id">537884610101794</string>
     <string name="fb_login_protocol_scheme">fb537884610101794</string>
+    <string name="goalInfoField">The goal set for this day was:\n </string>
 
 
 </resources>
