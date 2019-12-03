@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimaryLight">#332274A5</color>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#1C5F88</color>
+    <color name="colorPrimaryDark">#939393</color>
+    <color name="colorAccent">#ffd816</color>
+    <color name="title_bar">#ffffff</color>
     <color name="darkBlue">#2274a5</color>
     <color name="lightBlue">#AECCDE</color>
     <color name="yellow">#ffd816</color>

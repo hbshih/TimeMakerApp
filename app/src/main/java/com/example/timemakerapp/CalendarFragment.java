@@ -2,7 +2,6 @@ package com.example.timemakerapp;
 
 
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +22,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,8 +46,7 @@ public class CalendarFragment extends Fragment {
 
     private CalendarView calendarView;
     private TextView failedTasksTextView, achievedTasksTextView;
-    private CardView c_dayInfo;
-    private TextView dailyGoalInfoText;
+    private String goal;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -73,9 +69,7 @@ public class CalendarFragment extends Fragment {
 
         achievedTasksTextView = view.findViewById(R.id.goalsAchievedNumber);
         failedTasksTextView = view.findViewById(R.id.goalsFailedNumber);
-        c_dayInfo = view.findViewById(R.id.c_dayInfo);
         calendarView = view.findViewById(R.id.calendarView);
-        dailyGoalInfoText = view.findViewById(R.id.t_goalInfo);
 
         getUserTasks();
 
@@ -85,18 +79,23 @@ public class CalendarFragment extends Fragment {
     }
 
     private void createDayListener(View view) {
+
         calendarView.setOnDayClickListener(eventDay -> {
+            //this.dailyGoalInfoText = null;
+            goal = "There was no goal set on this day";
             SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
             String eventDate = fmt.format(eventDay.getCalendar().getTime());
 
             DailyTask task = null;
 
             for (DailyTask t : userTasks) {
-                if (fmt.format(t.getTime()).equals(eventDate)){
-                    this.dailyGoalInfoText.setText(getString(R.string.goalInfoField) + t.getName());
-                    this.c_dayInfo.setVisibility(View.VISIBLE);
+                if (fmt.format(t.getTime()).equals(eventDate)) {
+                    this.goal = getString(R.string.goalInfoField) + t.getName();
+                    //this.dailyGoalInfoText.setText(getString(R.string.goalInfoField) + t.getName());
                 }
             }
+
+            openDialog(this.goal);
 
         });
     }
@@ -108,12 +107,11 @@ public class CalendarFragment extends Fragment {
             Date taskDate = task.getTime();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(taskDate);
-            Log.d("Event Time",calendar.get(Calendar.YEAR) + "YY" + calendar.get(Calendar.MONTH) + "MM" + calendar.get(Calendar.DAY_OF_MONTH));
+            Log.d("Event Time", calendar.get(Calendar.YEAR) + "YY" + calendar.get(Calendar.MONTH) + "MM" + calendar.get(Calendar.DAY_OF_MONTH));
 
-            if (task.isAchieved()){
+            if (task.isAchieved()) {
                 events.add(new EventDay(calendar, R.drawable.sample_icon_2));
-            }
-            else{
+            } else {
                 events.add(new EventDay(calendar, R.drawable.sample_icon_3));
             }
 
@@ -163,6 +161,11 @@ public class CalendarFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    public void openDialog(String dayGoal) {
+        Dialog dialog = new Dialog(dayGoal);
+        dialog.show(getFragmentManager(), "dialog");
     }
 
 
