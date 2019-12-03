@@ -45,7 +45,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/textHeight"
                         android:layout_marginVertical="@dimen/titleMargin"
-                        android:text="The goal completed on this day was: "
+                        android:text="@string/goalInfoField"
                         android:textSize="@dimen/subtitle"
                         android:textStyle="bold" />
 
@@ -127,7 +127,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
-                                android:src="@android:drawable/checkbox_on_background" />
+                                android:src="@android:drawable/checkbox_on_background"
+                                android:layout_alignParentLeft="true" />
 
                         <TextView
                                 android:id="@+id/goalsAchievedNumber"

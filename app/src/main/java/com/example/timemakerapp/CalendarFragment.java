@@ -2,6 +2,7 @@ package com.example.timemakerapp;
 
 
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,6 +50,7 @@ public class CalendarFragment extends Fragment {
     private CalendarView calendarView;
     private TextView failedTasksTextView, achievedTasksTextView;
     private CardView c_dayInfo;
+    private TextView dailyGoalInfoText;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -70,6 +75,7 @@ public class CalendarFragment extends Fragment {
         failedTasksTextView = view.findViewById(R.id.goalsFailedNumber);
         c_dayInfo = view.findViewById(R.id.c_dayInfo);
         calendarView = view.findViewById(R.id.calendarView);
+        dailyGoalInfoText = view.findViewById(R.id.t_goalInfo);
 
         getUserTasks();
 
@@ -80,7 +86,18 @@ public class CalendarFragment extends Fragment {
 
     private void createDayListener(View view) {
         calendarView.setOnDayClickListener(eventDay -> {
-            this.c_dayInfo.setVisibility(View.VISIBLE);
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+            String eventDate = fmt.format(eventDay.getCalendar().getTime());
+
+            DailyTask task = null;
+
+            for (DailyTask t : userTasks) {
+                if (fmt.format(t.getTime()).equals(eventDate)){
+                    this.dailyGoalInfoText.setText(getString(R.string.goalInfoField) + t.getName());
+                    this.c_dayInfo.setVisibility(View.VISIBLE);
+                }
+            }
+
         });
     }
 
@@ -100,23 +117,6 @@ public class CalendarFragment extends Fragment {
                 events.add(new EventDay(calendar, R.drawable.sample_icon_3));
             }
 
-            /*
-            Calendar calendar = Calendar.getInstance();
-            events.add(new EventDay(calendar, R.drawable.sample_three_icons));
-            events.add(new EventDay(calendar, R.drawable.sample_three_icons, Color.parseColor("#228B22")));
-
-            Calendar calendar1 = Calendar.getInstance();
-            calendar1.add(Calendar.DAY_OF_MONTH, 10);
-            events.add(new EventDay(calendar1, R.drawable.sample_icon_2));
-
-            Calendar calendar2 = Calendar.getInstance();
-            calendar2.add(Calendar.DAY_OF_MONTH, 5);
-            events.add(new EventDay(calendar2, R.drawable.sample_icon_3));
-
-            Calendar calendar3 = Calendar.getInstance();
-            calendar3.add(Calendar.DAY_OF_MONTH, 7);
-            events.add(new EventDay(calendar3, R.drawable.sample_four_icons));
-            */
         }
         calendarView.setEvents(events);
     }
