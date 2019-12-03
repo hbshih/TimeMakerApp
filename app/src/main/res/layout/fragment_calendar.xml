@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="@color/darkBlue"
         tools:context=".CalendarFragment"
-        android:layout_marginVertical="40dp">
+        android:layout_marginBottom="40dp">
     <!-- TODO: Update blank fragment layout -->
 
 
