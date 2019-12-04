@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 import com.google.firebase.firestore.*;
 
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.*;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,10 +83,11 @@ public class AchievementsFragment extends Fragment {
                                 Map<String,Object> taskMap = doc.getData();
                                 String title = (String) taskMap.get("title");
                                 String subtitle = (String) taskMap.get("subtitle");
-                                int  max = ((Number)taskMap.get("max")).intValue();
-                                int order = ((Number)taskMap.get("order")).intValue();
+                                int  max = Integer.parseInt(taskMap.get("max").toString());
+                                HashMap order = ((HashMap)taskMap.get("order"));
+                                int orderUser = Integer.parseInt(order.get(FirebaseAuth.getInstance().getCurrentUser().getUid()).toString());
                                 //System.out.println("Read Achievements : " +title+" "+max+" "+order+" ");
-                                Achieves.add(new AchievementsItem(title, subtitle , max , order));
+                                Achieves.add(new AchievementsItem(title, subtitle , max , orderUser));
                             }
 
                             //for(AchievementsItem i :Achieves){System.out.println("Read Achievements : " +i.title);}
