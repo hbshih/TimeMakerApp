@@ -196,9 +196,9 @@ public class AchievementsFragment extends Fragment {
             if (element.equals("1stuse")){
                 System.out.println("1stuse: "+((Number)newcountUpdate.get(currentUser)).intValue()  );
                 if( ((Number)newcountUpdate.get(currentUser)).intValue() == 1 ){
-                    Map<String, Object> firstuseUpdates = new HashMap<>();
-                    firstuseUpdates.put("order", newcountUpdate);
-                    ref.update(firstuseUpdates);
+                    //Map<String, Object> firstuseUpdates = new HashMap<>();
+                    //firstuseUpdates.put("order", newcountUpdate);
+                    ref.update(newcountUpdates);
                 }
             }
             else ref.update(newcountUpdates);
