@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     Button bt_sendEmail;
     TextView t_errorSendEmail;
     TextView t_errorLogin;
+    ProgressBar progressBar;
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -75,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mAuth = FirebaseAuth.getInstance();
 
+
         setFacebookCB();
 
         // Init
@@ -89,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         t_recoverPassEmail = findViewById(R.id.t_recoverPassEmail);
         t_errorSendEmail = findViewById(R.id.t_errorSendEmail);
         t_errorLogin = findViewById(R.id.t_errorLogin);
+        progressBar = findViewById(R.id.progressBar);
 
         // Set Listeners
         bt_login.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +138,9 @@ public class LoginActivity extends AppCompatActivity {
     // ############ EMAIL ############
 
     private void onSignInEmail(String email, String password) {
+        progressBar.setVisibility(View.VISIBLE);
+
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         // Sing in existing users
@@ -155,12 +162,17 @@ public class LoginActivity extends AppCompatActivity {
                             t_errorLogin.setText(task.getException().getMessage());
                             t_errorLogin.setVisibility(View.VISIBLE);
                         }
+                        progressBar.setVisibility(View.GONE);
+
+
                     }
                 });
     }
 
     // ############ GOOGLE ############
     private void onSignInGoogle() {
+        progressBar.setVisibility(View.VISIBLE);
+
         //Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -218,6 +230,8 @@ public class LoginActivity extends AppCompatActivity {
                     closeKeyboard();
                     Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                 }
+                progressBar.setVisibility(View.GONE);
+
             }
         });
     }
@@ -225,6 +239,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // ############ FACEBOOK ############
     private void setFacebookCB() {
+
         FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         mCallbackManager = CallbackManager.Factory.create();
@@ -250,6 +265,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithFacebook(AccessToken token) {
+        progressBar.setVisibility(View.VISIBLE);
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -273,6 +289,7 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }

@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
     Button bt_register;
     TextView t_navLogin;
     TextView t_errorRegister;
+    ProgressBar progressBar;
+
     private String TAG = "RegisterActivity";
 
     private FirebaseAuth mAuth;
@@ -48,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         bt_register = (Button) findViewById(R.id.bt_register);
         t_navLogin = (TextView) findViewById(R.id.t_navLogin);
         t_errorRegister = (TextView) findViewById(R.id.t_errorRegister);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         bt_register.setOnClickListener(new View.OnClickListener() {
 
@@ -58,6 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (auxPass.equals(auxPass2)) {
                     t_errorRegister.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
                     signUpUser(t_email.getText().toString(), auxPass);
                 } else {
                     t_errorRegister.setText("Passwords do not match");
@@ -99,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
                             t_errorRegister.setVisibility(View.VISIBLE);
                         }
 
-                        // ...
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }

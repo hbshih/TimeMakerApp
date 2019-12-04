@@ -321,11 +321,13 @@ public class DashboardFragment extends Fragment {
                         DailyTask newTask = new DailyTask(newTaskName, false, currentUser);
                         setDailyTaskLayout(newTask);
 
-                        db.collection("tasks").document()
-                                .set(newTask).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        db.collection("tasks")
+                                .add(newTask).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
                                 if(task.isSuccessful()){
+                                    DocumentReference doc = task.getResult();
+                                    newTask.setId(doc.getId());
                                     Log.d("TaskInsert", "DailyTask successfully inserted");
                                 } else {
                                     Log.d("TaskInsert", "DailyTask failed insertion");
