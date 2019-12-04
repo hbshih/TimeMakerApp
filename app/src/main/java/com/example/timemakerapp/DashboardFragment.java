@@ -240,6 +240,7 @@ public class DashboardFragment extends Fragment {
 
                     } else {
                         // Create new user data
+                        Date today = new Date();
                         Map<String, Object> docData = new HashMap<>();
                         docData.put("day_streak", 0);
                         docData.put("last_completed_goal_date", today);

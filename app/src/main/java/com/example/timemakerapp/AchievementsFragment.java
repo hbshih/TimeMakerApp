@@ -45,7 +45,7 @@ public class AchievementsFragment extends Fragment {
     Context mC;
     String mTitle[] = {"First Use", "3 Days in a Row", "Completed 10 Goals", "Perfect Week", "Completed 100 Goals"};
     // String mDescription[] = {"Completed your first goal", "Completed 3 daily goals consecutively", "", "Finished all goals in a week","", "", "....bar...", "...bar..."};
-    int images [] = {R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice,R.drawable.achievements_firstprice};
+    int images [] = {R.drawable.first,R.drawable.turkey, R.drawable.goal, R.drawable.signboard, R.drawable.schedule };
     //int pgsMax[] = {20,7,13};
     //int pgsVisible[] = {0,1,1};
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -236,8 +236,6 @@ public class AchievementsFragment extends Fragment {
         }
 
         private void updateAchievements(ProgressHolder pHolder, int pos){
-
-
             System.out.println("Update Achievements : " +rDBdata.get(pos).title);
             pHolder.pgsBar.setProgress(rDBdata.get(pos).order);
             pHolder.textview.setText(rDBdata.get(pos).order+"/"+rDBdata.get(pos).max);
