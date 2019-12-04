@@ -35,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firestore.v1.WriteResult;
 
 import java.text.ParseException;
@@ -217,12 +218,14 @@ public class DashboardFragment extends Fragment {
                                 int old_days = Integer.parseInt(myListOfDocuments.get("day_streak").toString());
                                 Date new_date = today;
                                 System.out.println("New number of days : " + old_days + 1);
-                                docData.put("day_streak", old_days + 1);
+                                docData.put("day_streak_3", old_days + 1);
+                                docData.put("day_streak_7", old_days + 1);
                                 docData.put("last_completed_goal_date", new_date);
                             }else
                             {
                                 Date new_date = today;
-                                docData.put("day_streak", 0);
+                                docData.put("day_streak_3", 0);
+                                docData.put("day_streak_7", 0);
                                 docData.put("last_completed_goal_date", new_date);
                             }
 
@@ -230,7 +233,8 @@ public class DashboardFragment extends Fragment {
                         {
                             e.printStackTrace();
                             Date new_date = today;
-                            docData.put("day_streak", 0);
+                            docData.put("day_streak_3", 0);
+                            docData.put("day_streak_7", 0);
                             docData.put("last_completed_goal_date", new_date);
                         }
 
@@ -242,11 +246,14 @@ public class DashboardFragment extends Fragment {
                         // Create new user data
                         Date today = new Date();
                         Map<String, Object> docData = new HashMap<>();
-                        docData.put("day_streak", 0);
-                        //docData.put("last_completed_goal_date", today);
+                        docData.put("day_streak_3", 0);
+                        docData.put("day_streak_7", 0);
+                        docData.put("last_completed_goal_date", today);
                         docData.put("number_of_completed_tasks", 1);
                         db.collection("user_achievements").document(currentUser).set(docData);
                         System.out.println("Query Failed - Created new user");
+
+                        insertNewAchieveEntry(currentUser);
                     }
                 } else {
                     System.out.println("Error");
@@ -255,6 +262,47 @@ public class DashboardFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public void insertNewAchieveEntry(String currentUser){
+
+        FirebaseFirestore.getInstance()
+                .collection(
+                        "achievements")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@Nonnull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            boolean NewUser = true;
+                            for (QueryDocumentSnapshot doc : task.getResult()){
+                                Map<String,Object> taskMap = doc.getData();
+                                Map<String,Object> order =  (Map<String,Object> )taskMap.get("order");
+                                for (Map.Entry<String, Object> entry : order.entrySet()) {
+                                    String k = entry.getKey();
+                                    System.out.println("OnSuccess : " + currentUser);
+                                    if(k.equals(currentUser)){
+                                        NewUser = false;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+
+                            if(NewUser){
+                                Map<String, Object> newOrder = new HashMap<>();
+                                Map<String, Object> newOrders = new HashMap<>();
+                                newOrder.put(currentUser, 0);
+                                newOrders.put("order", newOrder);
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    FirebaseFirestore.getInstance().collection("achievements").document(doc.getId()).set(newOrders, SetOptions.merge());
+                                }
+                            }
+                        }
+                        else System.out.println("Query Failed");
+
+                    }
+                });
     }
 
     private void createNewTask(final View view) {

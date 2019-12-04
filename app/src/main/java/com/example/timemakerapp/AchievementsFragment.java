@@ -56,6 +56,7 @@ public class AchievementsFragment extends Fragment {
     List<AchievementsItem> Achieves;
     private String currentUser;
     private String TAG = "AchievementActivity";
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();;
 
     private DatabaseReference mDatabase;
     // class for achievements from firebase
@@ -86,7 +87,7 @@ public class AchievementsFragment extends Fragment {
                             //  List<DocumentSnapshot> myListOfDocuments = task.getResult();
                             //System.out.println("OnSuccess : " + myListOfDocuments);
                             currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            //insertNewUser(task, currentUser);
+                        //    insertNewUser(task, currentUser);
                             Achieves = new ArrayList<>();
                             //List<AchievementsItem> progress = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : task.getResult()){
@@ -221,18 +222,16 @@ public class AchievementsFragment extends Fragment {
             else ref.update(newcountUpdates);
         }*/
 
-        //update streak-related achievements: 3daysinarow
-        System.out.println("daystreak: "+((Number) updatetasks.get("day_streak")).intValue() );
-        DocumentReference ref = FirebaseFirestore.getInstance().collection("achievements").document("3daysinrow");
+        final DocumentReference ref = FirebaseFirestore.getInstance().collection("achievements").document("3daysinrow");
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@Nonnull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
 
                     currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    System.out.println("daystreak2: "+((Number) updatetasks.get("day_streak")).intValue() );
-                    if (((Number) updatetasks.get("day_streak")).intValue() % 3 == 0 && ((Number) updatetasks.get("day_streak")).intValue() != 0 ) {
-                        System.out.println("daystreak3: "+((Number) updatetasks.get("day_streak")).intValue() );
+                  //  System.out.println("daystreak2: "+((Number) updatetasks.get("day_streak")).intValue() );
+                    if (((Number) updatetasks.get("day_streak_3")).intValue() % 3 == 0 && ((Number) updatetasks.get("day_streak_3")).intValue() != 0 ) {
+                        System.out.println("daystreak3: "+((Number) updatetasks.get("day_streak_3")).intValue() );
                         Map<String,Object> taskMap= task.getResult().getData();
                         Map<String,Object> order = (Map<String,Object> )taskMap.get("order");
                         for (Map.Entry<String, Object> entry : order.entrySet()) {
@@ -244,6 +243,8 @@ public class AchievementsFragment extends Fragment {
 
                                 newstreakUpdate.put(currentUser , ((Number) entry.getValue()).intValue() + 1);
                                 newstreakUpdates.put("order", newstreakUpdate);
+                                ref.update(newstreakUpdates);
+                                resetAchievementStreak_3();
                                 break;
                             }
                             else continue;
@@ -257,15 +258,15 @@ public class AchievementsFragment extends Fragment {
             }
         });
 
-        ref = FirebaseFirestore.getInstance().collection("achievements").document("perfectweek");
-        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        final DocumentReference ref2 = FirebaseFirestore.getInstance().collection("achievements").document("perfectweek");
+        ref2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@Nonnull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
 
                     currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    if (((Number) updatetasks.get("day_streak")).intValue() % 7 == 0 && ((Number) updatetasks.get("day_streak")).intValue() != 0 ) {
+                    if (((Number) updatetasks.get("day_streak_7")).intValue() % 7 == 0 && ((Number) updatetasks.get("day_streak_7")).intValue() != 0 ) {
 
                         Map<String,Object> taskMap= task.getResult().getData();
                         Map<String,Object> order = (Map<String,Object> )taskMap.get("order");
@@ -278,6 +279,8 @@ public class AchievementsFragment extends Fragment {
 
                                 newstreakUpdate.put(currentUser , ((Number) entry.getValue()).intValue() + 1);
                                 newstreakUpdates.put("order", newstreakUpdate);
+                                ref2.update(newstreakUpdates);
+                                resetAchievementStreak_7();
                                 break;
                             }
                             else continue;
@@ -292,7 +295,19 @@ public class AchievementsFragment extends Fragment {
         });
     }
 
+    private void resetAchievementStreak_3()
+    {
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("day_streak_3", 0);
+        db.collection("user_achievements").document(currentUser).update(docData);
+    }
 
+    private void resetAchievementStreak_7()
+    {
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("day_streak_7", 0);
+        db.collection("user_achievements").document(currentUser).update(docData);
+    }
 
 
     public AchievementsFragment() {
