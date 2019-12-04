@@ -171,13 +171,8 @@ public class AchievementsFragment extends Fragment {
         getAchievementsItems();
         //MyAdapter adapter = new MyAdapter(getActivity(), mTitle, mDescription, images, Achieves);
         //listview.setAdapter(adapter);
-
-
-
         return fragView;
     }
-
-
 
     class MyAdapter extends ArrayAdapter<String>{
 
