@@ -37,6 +37,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firestore.v1.WriteResult;
 
+import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +48,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -77,7 +79,6 @@ public class DashboardFragment extends Fragment {
         Log.d("userid", currentUser);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        updateUserAchivementsInfo();
     }
 
     @Override
@@ -199,24 +200,40 @@ public class DashboardFragment extends Fragment {
                     if (myListOfDocuments != null) {
                         //Map<String, Object>  myListOfDocuments = task.getResult().getData();
                         System.out.println("OnSuccess : " + myListOfDocuments);
-
                         Map<String, Object> docData = new HashMap<>();
-                        docData.put("day_streak", 0);
-                        docData.put("last_completed_goal_date", today);
-
                         String last_updated_date = myListOfDocuments.get("last_completed_goal_date").toString();
-
-/*
                         Date today = new Date();
+                        Date last_completed_date_task = ((Timestamp) myListOfDocuments.get("last_completed_goal_date")).toDate();
 
+                        try {
+                            Date date1 = today;
+                            Date date2 = last_completed_date_task;
+                            long diff = Math.abs(date2.getTime() - date1.getTime());
+                            System.out.println("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+                            int days_between_dates = Math.toIntExact(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+                            if(days_between_dates == 1)
+                            {
+                                System.out.println("Add new");
+                                //update consecutive days
+                                int old_days = Integer.parseInt(myListOfDocuments.get("day_streak").toString());
+                                Date new_date = today;
+                                System.out.println("New number of days : " + old_days + 1);
+                                docData.put("day_streak", old_days + 1);
+                                docData.put("last_completed_goal_date", new_date);
+                            }else
+                            {
+                                Date new_date = today;
+                                docData.put("day_streak", 0);
+                                docData.put("last_completed_goal_date", new_date);
+                            }
 
-                        LocalDate d1 = LocalDate.parse(last_updated_date, DateTimeFormatter.ISO_LOCAL_DATE);
-                        LocalDate d2 = LocalDate.parse(today.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
-                        Duration diff = Duration.between(d1.atStartOfDay(), d2.atStartOfDay());
-                        long diffDays = diff.toDays();*/
-
-                        System.out.println("Date: " + diffDays);
-
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                            Date new_date = today;
+                            docData.put("day_streak", 0);
+                            docData.put("last_completed_goal_date", new_date);
+                        }
 
                         int current_number_of_task = Integer.parseInt(myListOfDocuments.get("number_of_completed_tasks").toString());
                         docData.put("number_of_completed_tasks", current_number_of_task + 1);
@@ -227,7 +244,7 @@ public class DashboardFragment extends Fragment {
                         Map<String, Object> docData = new HashMap<>();
                         docData.put("day_streak", 0);
                         docData.put("last_completed_goal_date", today);
-                        docData.put("number_of_completed_tasks", 0);
+                        docData.put("number_of_completed_tasks", 1);
                         db.collection("user_achievements").document(currentUser).set(docData);
                         System.out.println("Query Failed - Created new user");
                     }
