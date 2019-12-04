@@ -183,8 +183,8 @@ public class AchievementsFragment extends Fragment {
        // Map<String, Object> newstreakUpdate = new HashMap<>();
         Map<String, Object> newcountUpdates = new HashMap<>();
         //Map<String, Object> newstreakUpdates = new HashMap<>();
-        newcountUpdate.put(currentUser , updatetasks.get("number_of_completed_tasks"));
-        newcountUpdates.put("order", newcountUpdate);
+        //newcountUpdate.put(currentUser , updatetasks.get("number_of_completed_tasks"));
+        newcountUpdates.put("order."+currentUser, updatetasks.get("number_of_completed_tasks"));
 
 
         String [] AchieveList1 = { "1stuse", "complete100goals", "complete10goals"};
@@ -192,35 +192,29 @@ public class AchievementsFragment extends Fragment {
         //int day_streak = ((Number)updatetasks.get("day_streak")).intValue();
 
         for (String element : AchieveList1) {
-            DocumentReference ref = FirebaseFirestore.getInstance().collection("achievements").document(element);
-            if (element.equals("1stuse")){
-                System.out.println("1stuse: "+((Number)newcountUpdate.get(currentUser)).intValue()  );
-                if( ((Number)newcountUpdate.get(currentUser)).intValue() == 1 ){
-                    //Map<String, Object> firstuseUpdates = new HashMap<>();
-                    //firstuseUpdates.put("order", newcountUpdate);
-                    ref.update(newcountUpdates);
-                }
-            }
-            else ref.update(newcountUpdates);
 
+            final DocumentReference ref2 = FirebaseFirestore.getInstance().collection("achievements").document(element);
+            ref2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@Nonnull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            Map<String,Object> taskMap= task.getResult().getData();
+                            Map<String,Object> order = (Map<String,Object> )taskMap.get("order");
+                            for (Map.Entry<String, Object> entry : order.entrySet()) {
+                                String k = entry.getKey();
+                                if(k.equals(currentUser)) {
+                                    ref2.update(newcountUpdates);
+                                    break;
+                                }
+                                else continue;
+                            }
+                        }
+                }
+            });
         }
 
-
-        /*
-        for (String element : AchieveList2) {
-            DocumentReference ref = FirebaseFirestore.getInstance().collection("achievements").document(element);
-            Map<String, Object> newstreakUpdate = new HashMap<>();
-            int int_streak = ((Number)updatetasks.get("day_streak")).intValue();
-            if (element.equals("3daysinrow")){
-                if(int_streak %3 == 0  && int_streak !=0 ) {
-                    newstreakUpdate.put(currentUser, updatetasks.get("day_streak"));
-                    Map<String, Object> firstuseUpdates = new HashMap<>();
-                    firstuseUpdates.put("order", newcountUpdate);
-                    ref.update(firstuseUpdates);
-                }
-            }
-            else ref.update(newcountUpdates);
-        }*/
+        
 
         final DocumentReference ref = FirebaseFirestore.getInstance().collection("achievements").document("3daysinrow");
         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
