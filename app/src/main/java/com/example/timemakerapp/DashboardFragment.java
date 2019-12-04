@@ -31,13 +31,27 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firestore.v1.WriteResult;
 
+import java.text.ParseException;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
 
 
 public class DashboardFragment extends Fragment {
@@ -66,7 +80,6 @@ public class DashboardFragment extends Fragment {
         Log.d("userid", currentUser);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
     }
 
     @Override
@@ -150,6 +163,7 @@ public class DashboardFragment extends Fragment {
 
                                                         db.collection("tasks").document(currentTask.getId())
                                                                 .update("achieved", true);
+                                                        updateUserAchivementsInfo();
                                                     }})
                                                 .setNegativeButton(android.R.string.no, null).show();
 
@@ -175,6 +189,121 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
+    private void updateUserAchivementsInfo()
+    {
+        DocumentReference docRef = db.collection("user_achievements").document(currentUser);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Map<String, Object>  myListOfDocuments = task.getResult().getData();
+                    if (myListOfDocuments != null) {
+                        //Map<String, Object>  myListOfDocuments = task.getResult().getData();
+                        System.out.println("OnSuccess : " + myListOfDocuments);
+                        Map<String, Object> docData = new HashMap<>();
+                        String last_updated_date = myListOfDocuments.get("last_completed_goal_date").toString();
+                        Date today = new Date();
+                        Date last_completed_date_task = ((Timestamp) myListOfDocuments.get("last_completed_goal_date")).toDate();
+
+                        try {
+                            Date date1 = today;
+                            Date date2 = last_completed_date_task;
+                            long diff = Math.abs(date2.getTime() - date1.getTime());
+                            System.out.println("Days: " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+                            int days_between_dates = Math.toIntExact(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+                            if(days_between_dates == 1)
+                            {
+                                System.out.println("Add new");
+                                //update consecutive days
+                                int old_days = Integer.parseInt(myListOfDocuments.get("day_streak").toString());
+                                Date new_date = today;
+                                System.out.println("New number of days : " + old_days + 1);
+                                docData.put("day_streak_3", old_days + 1);
+                                docData.put("day_streak_7", old_days + 1);
+                                docData.put("last_completed_goal_date", new_date);
+                            }else
+                            {
+                                Date new_date = today;
+                                docData.put("day_streak_3", 0);
+                                docData.put("day_streak_7", 0);
+                                docData.put("last_completed_goal_date", new_date);
+                            }
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                            Date new_date = today;
+                            docData.put("day_streak_3", 0);
+                            docData.put("day_streak_7", 0);
+                            docData.put("last_completed_goal_date", new_date);
+                        }
+
+                        int current_number_of_task = Integer.parseInt(myListOfDocuments.get("number_of_completed_tasks").toString());
+                        docData.put("number_of_completed_tasks", current_number_of_task + 1);
+                        db.collection("user_achievements").document(currentUser).update(docData);
+
+                    } else {
+                        // Create new user data
+                        Date today = new Date();
+                        Map<String, Object> docData = new HashMap<>();
+                        docData.put("day_streak_3", 0);
+                        docData.put("day_streak_7", 0);
+                        docData.put("last_completed_goal_date", today);
+                        docData.put("number_of_completed_tasks", 1);
+                        db.collection("user_achievements").document(currentUser).set(docData);
+                        System.out.println("Query Failed - Created new user");
+
+                        insertNewAchieveEntry(currentUser);
+                    }
+                } else {
+                    System.out.println("Error");
+                   // Log.d(TAG, "get failed with ", task.getException());
+                    System.out.println(task.getException());
+                }
+            }
+        });
+    }
+
+    public void insertNewAchieveEntry(String currentUser){
+
+        FirebaseFirestore.getInstance()
+                .collection(
+                        "achievements")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@Nonnull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            boolean NewUser = true;
+                            for (QueryDocumentSnapshot doc : task.getResult()){
+                                Map<String,Object> taskMap = doc.getData();
+                                Map<String,Object> order =  (Map<String,Object> )taskMap.get("order");
+                                for (Map.Entry<String, Object> entry : order.entrySet()) {
+                                    String k = entry.getKey();
+                                    System.out.println("OnSuccess : " + currentUser);
+                                    if(k.equals(currentUser)){
+                                        NewUser = false;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+
+                            if(NewUser){
+                                Map<String, Object> newOrder = new HashMap<>();
+                                Map<String, Object> newOrders = new HashMap<>();
+                                newOrder.put(currentUser, 0);
+                                newOrders.put("order", newOrder);
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    FirebaseFirestore.getInstance().collection("achievements").document(doc.getId()).set(newOrders, SetOptions.merge());
+                                }
+                            }
+                        }
+                        else System.out.println("Query Failed");
+
+                    }
+                });
+    }
 
     private void createNewTask(final View view) {
         new AlertDialog.Builder(view.getContext())
