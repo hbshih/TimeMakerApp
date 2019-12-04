@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
 
     //achievement initialization
-    private AchievementDBupdater Achieveupdater;
+    //private AchievementDBupdater Achieveupdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,6 +302,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         //insert new achievement entry with user
+        AchievementDBupdater Achieveupdater = new AchievementDBupdater();
+        Achieveupdater.insertNewAchieveEntry();
+
     }
 
     private void forgottenPassword(String email) {

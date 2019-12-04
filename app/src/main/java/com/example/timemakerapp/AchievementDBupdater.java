@@ -17,11 +17,13 @@ public final class AchievementDBupdater {
     private String currentUser;
     private String TAG = "AchievementActivity";
 
-    private AchievementDBupdater(){}
+    public AchievementDBupdater(){
+        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
 
 
     public void insertNewAchieveEntry(){
-        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         FirebaseFirestore.getInstance()
                 .collection(
                         "achievements")

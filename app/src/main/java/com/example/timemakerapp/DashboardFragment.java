@@ -243,7 +243,7 @@ public class DashboardFragment extends Fragment {
                         // Create new user data
                         Map<String, Object> docData = new HashMap<>();
                         docData.put("day_streak", 0);
-                        docData.put("last_completed_goal_date", today);
+                        //docData.put("last_completed_goal_date", today);
                         docData.put("number_of_completed_tasks", 1);
                         db.collection("user_achievements").document(currentUser).set(docData);
                         System.out.println("Query Failed - Created new user");
