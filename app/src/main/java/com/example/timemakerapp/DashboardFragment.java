@@ -190,7 +190,6 @@ public class DashboardFragment extends Fragment {
 
     private void updateUserAchivementsInfo()
     {
-        Date today = new Date();
         DocumentReference docRef = db.collection("user_achievements").document(currentUser);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
