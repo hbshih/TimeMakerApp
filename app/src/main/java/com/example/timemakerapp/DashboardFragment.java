@@ -153,6 +153,7 @@ public class DashboardFragment extends Fragment {
                                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int whichButton) {
+
                                                         mDailyTaskCheckbox.setVisibility(View.INVISIBLE);
                                                         mDailyFocus.setText(R.string.daily_task_achieved);
                                                         Toast.makeText(context, "Nice job!", Toast.LENGTH_SHORT).show();
@@ -163,6 +164,7 @@ public class DashboardFragment extends Fragment {
 
                                                         db.collection("tasks").document(currentTask.getId())
                                                                 .update("achieved", true);
+
                                                         updateUserAchivementsInfo();
                                                     }})
                                                 .setNegativeButton(android.R.string.no, null).show();
@@ -328,6 +330,7 @@ public class DashboardFragment extends Fragment {
                                 if(task.isSuccessful()){
                                     DocumentReference doc = task.getResult();
                                     newTask.setId(doc.getId());
+                                    currentTask = newTask;
                                     Log.d("TaskInsert", "DailyTask successfully inserted");
                                 } else {
                                     Log.d("TaskInsert", "DailyTask failed insertion");
