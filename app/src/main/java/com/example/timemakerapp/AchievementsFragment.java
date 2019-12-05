@@ -179,7 +179,8 @@ public class AchievementsFragment extends Fragment {
     private void processAchievement(final Map<String, Object> updatetasks){
         currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         List <Object> updated = new ArrayList<>();
-        updated.add(updatetasks.get("day_streak"));
+        updated.add(updatetasks.get("day_streak_3"));
+        updated.add(updatetasks.get("day_streak_7"));
         updated.add(updatetasks.get("number_of_completed_task"));
         Map<String, Object> newcountUpdate = new HashMap<>();
        // Map<String, Object> newstreakUpdate = new HashMap<>();
