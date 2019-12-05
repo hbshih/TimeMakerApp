@@ -51,7 +51,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/textHeight"
                             android:layout_marginVertical="10dp"
-
+                            android:inputType="textEmailAddress"
                             android:background="@color/white"
                             android:hint="Please enter your email" />
 
@@ -68,7 +68,7 @@
                             android:layout_height="@dimen/textHeight"
                             android:layout_marginVertical="10dp"
                             android:background="@color/white"
-                            android:hint="Please enter your email"
+                            android:hint="Please enter your password"
                             android:inputType="textPassword" />
 
                     <EditText
