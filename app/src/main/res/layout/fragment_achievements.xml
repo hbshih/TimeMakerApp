@@ -4,43 +4,53 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:background="@color/darkBlue"
+        android:paddingHorizontal="@dimen/card_margin_horizontal"
         tools:context=".AchievementsFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="64dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_editor_absoluteX="8dp"
-            app:layout_editor_absoluteY="8dp">
-
-        <TextView
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:background="#fff"
-                android:gravity="center"
-                android:text="Achievements"
-                android:textColor="#00bce2"
-                android:textSize="64px"
-                android:textStyle="bold" />
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="64dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_editor_absoluteX="8dp"
+                app:layout_editor_absoluteY="8dp">
 
-        <ListView
-                android:id="@+id/listview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="10.0sp"
-                android:gravity="center" />
-    </LinearLayout>
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="@dimen/activity_vertical_margin"
+                    android:backgroundTint="@color/lightBlue">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/titleMargin"
+                        android:gravity="center"
+                        android:text="Achievements"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+                        android:textStyle="bold" />
+
+            </androidx.cardview.widget.CardView>
+
+
+            <ListView
+                    android:id="@+id/listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="10.0sp"
+                    android:gravity="center" />
+        </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
