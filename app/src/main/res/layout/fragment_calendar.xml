@@ -15,23 +15,12 @@
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/card_margin_horizontal">
 
-        <!--                app:pagesColor="@color/lightBlue" -->
-
-        <com.applandeo.materialcalendarview.CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="40dp"
-                app:abbreviationsBarColor="@color/lightBlue"
-                app:headerColor="@color/com_facebook_blue" />
-
         <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/lightBlue">
 
             <LinearLayout
@@ -116,13 +105,23 @@
                                 android:layout_alignParentRight="true"
                                 android:text="Goals Achieved"
                                 android:textSize="@dimen/subtitle" />
-
-
                     </RelativeLayout>
-
 
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-    </LinearLayout>
+
+
+        <!--                app:pagesColor="@color/lightBlue" -->
+
+        <com.applandeo.materialcalendarview.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="80dp"
+                app:abbreviationsBarColor="@color/lightBlue"
+                app:headerColor="@color/com_facebook_blue" />
+
+           </LinearLayout>
 </ScrollView>
