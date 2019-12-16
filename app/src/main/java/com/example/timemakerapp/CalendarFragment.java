@@ -110,9 +110,9 @@ public class CalendarFragment extends Fragment {
             Log.d("Event Time", calendar.get(Calendar.YEAR) + "YY" + calendar.get(Calendar.MONTH) + "MM" + calendar.get(Calendar.DAY_OF_MONTH));
 
             if (task.isAchieved()) {
-                events.add(new EventDay(calendar, R.drawable.ic_check_black_24dp));
+                events.add(new EventDay(calendar, R.drawable.ic_check_24dp));
             } else {
-                events.add(new EventDay(calendar, R.drawable.ic_clear_black_24dp));
+                events.add(new EventDay(calendar, R.drawable.ic_clear_24dp));
             }
 
         }
